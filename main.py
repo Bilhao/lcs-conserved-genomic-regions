@@ -64,7 +64,7 @@ def lcs_2_seq(seq1, seq2):
                 elif mp[i-1][j] < mp[i][j-1]:  # Se o valor da esquerda for maior, ir para o valor da esquerda
                     j -= 1
                 else:
-                    j -= 1  # Se os valores forem iguais, pode-se ir tanto para a cima, tanto para a esquerda
+                    i -= 1  # Se os valores forem iguais, pode-se ir tanto para a cima, tanto para a esquerda
         return r
 
 
@@ -72,7 +72,6 @@ def lcs_2_seq(seq1, seq2):
     mp = matriz_preenchida_IMP(md) # Matriz preenchida
     print(mp)
     print(reconstrucao_IMP(mp))
-
 
 
 lcs_2_seq("ATGCTGA", "TGCTAGC")
