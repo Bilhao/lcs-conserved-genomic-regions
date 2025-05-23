@@ -79,4 +79,6 @@ lcs_2_seq("ATGCTGA", "TGCTAGC")
 
 Quero conhecer a Isabela Bilhão
 
-Infelizmente o carioca ta na frente
+Infelizmente o carioca ta na frente 
+
+eu sou melhor
