@@ -75,8 +75,12 @@ def lcs_2_seq(seq1, seq2) -> str:
     return reconstrucao_IMP(mp)
 
 
+<<<<<<< HEAD
 seq1 = input("Primeira sequência: ")
 seq2 = input("Segunda sequência: ")
 lcs = lcs_2_seq(seq1, seq2)
 print(f"A maior subsequência comum entre '{seq1}' e '{seq2}' é: '{lcs}'")
+=======
+lcs_2_seq("ATGCTGA", "TGCTAGC")
+>>>>>>> 45286e2262c58f4d530b1f76428935b6f09673b9
 
