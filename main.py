@@ -77,8 +77,3 @@ def lcs_2_seq(seq1, seq2):
 
 lcs_2_seq("ATGCTGA", "TGCTAGC")
 
-Quero conhecer a Isabela Bilhão
-
-Infelizmente o carioca ta na frente 
-
-eu sou melhor
