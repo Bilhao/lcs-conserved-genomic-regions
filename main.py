@@ -79,3 +79,4 @@ seq1 = input("Primeira sequência: ")
 seq2 = input("Segunda sequência: ")
 lcs = lcs_2_seq(seq1, seq2)
 print(f"A maior subsequência comum entre '{seq1}' e '{seq2}' é: '{lcs}'")
+
