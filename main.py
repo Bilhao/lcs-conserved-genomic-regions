@@ -1,4 +1,5 @@
-def lcs_2_seq(seq1, seq2):
+
+def lcs_2_seq(seq1, seq2) -> str:
     n = len(seq1) + 1 # Núemro de linhas
     m = len(seq2) + 1 # Número de colunas
 
@@ -10,7 +11,7 @@ def lcs_2_seq(seq1, seq2):
         if linhas == 0:
             return []
         else:
-            return matriz_dinamica_REC(linhas - 1) + [[0] * (m)]
+            return matriz_dinamica_REC(linhas - 1) + [[0] * m]
 
     # Imperativa
     def matriz_dinamica_IMP() -> list[list]:
@@ -41,9 +42,9 @@ def lcs_2_seq(seq1, seq2):
             j = 1  # Variável de incremento "j" iniciada em 1 pois a primeira coluna é preenchida por zeros 
             while j < m:
                 if seq1[i-1] == seq2[j-1]:
-                    md[i][j] = md[i-1][j-1] + 1  # Se for igual: Será igual ao valor da diagonal anterior + 1
+                    md[i][j] = md[i-1][j-1] + 1  # Se for igual, será igual ao valor da diagonal anterior + 1
                 else:
-                    md[i][j] = max(md[i-1][j], md[i][j-1])  # Se não for igual: Será o máximo dos valores acima e a esquerda
+                    md[i][j] = max(md[i-1][j], md[i][j-1])  # Se não for igual, será o máximo dos valores acima e a esquerda
                 j += 1
             i += 1
         return md
@@ -51,7 +52,7 @@ def lcs_2_seq(seq1, seq2):
     # 3. Reconstrução da solução
     def reconstrucao_IMP(mp) -> str:
         r = "" 
-        i = n - 1  # Variáveis de incremento iniciadas em n - 1 pois 
+        i = n - 1  # Variáveis de incremento iniciadas em n - 1 pois a indexação começa em 0 até n - 1 (n - 1 é o último elemento)
         j = m - 1
         while i > 0 and j > 0:
             if seq1[i-1] == seq2[j-1]:
@@ -64,17 +65,18 @@ def lcs_2_seq(seq1, seq2):
                 elif mp[i-1][j] < mp[i][j-1]:  # Se o valor da esquerda for maior, ir para o valor da esquerda
                     j -= 1
                 else:
-                    j -= 1  # Se os valores forem iguais, pode-se ir tanto para a cima, tanto para a esquerda
+                    i -= 1  # Se os valores forem iguais, pode-se ir tanto para a cima, tanto para a esquerda
         return r
 
 
     md = matriz_dinamica_FUN() # Matriz dinâmica
     mp = matriz_preenchida_IMP(md) # Matriz preenchida
-    print(mp)
-    print(reconstrucao_IMP(mp))
+
+    return reconstrucao_IMP(mp)
 
 
+seq1 = input("Primeira sequência: ")
+seq2 = input("Segunda sequência: ")
+lcs = lcs_2_seq(seq1, seq2)
+print(f"A maior subsequência comum entre '{seq1}' e '{seq2}' é: '{lcs}'")
 
-lcs_2_seq("ATGCTGA", "TGCTAGC")
-
-Quero conhecer a Isabela Bilhão
