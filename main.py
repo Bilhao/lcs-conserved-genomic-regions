@@ -3,7 +3,6 @@ def lcs_2_seq(seq1, seq2) -> str:
     m = len(seq2) + 1 # Número de colunas
 
     # 1. Inicialização da matriz dinâmica (todos os valores iguais a 0 e tamanho = (n+1)x(m+1)): 
-    """
     # Recursiva
     def matriz_dinamica_REC(linhas=n) -> list[list]:
         if linhas == 0:
@@ -24,7 +23,6 @@ def lcs_2_seq(seq1, seq2) -> str:
             r1.append(r2)
             i += 1
         return r1
-    """
     
     # Funcional
     def matriz_dinamica_FUN() -> list[list]:
@@ -32,8 +30,6 @@ def lcs_2_seq(seq1, seq2) -> str:
 
 
     # 2. Preenchimento da matriz
-
-    # Imperativa
     def matriz_preenchida_IMP(matriz) -> list[list]:
         i = 1  # Variável de incremento "i" iniciada em 1 pois a primeira linha é preenchida por zeros
         while i < n:  
@@ -50,7 +46,7 @@ def lcs_2_seq(seq1, seq2) -> str:
     # 3. Reconstrução da solução
     def reconstrucao_IMP(matriz) -> str:
         r = "" 
-        i = n - 1  # Variáveis de incremento iniciadas em n - 1 pois a indexação começa em 0 até n - 1 (n - 1 é o último elemento)
+        i = n - 1  # Variáveis de incremento iniciadas em "n - 1" pois a indexação começa em 0 até "n - 1" (n - 1 é o último elemento)
         j = m - 1
         while i > 0 and j > 0:
             if seq1[i-1] == seq2[j-1]:
@@ -58,25 +54,17 @@ def lcs_2_seq(seq1, seq2) -> str:
                 i -= 1
                 j -= 1
             else:
-                if matriz[i-1][j] > matriz[i][j-1]:  # Se o valor de cima for maior, ir para o valor de cima
-                    i -= 1
-                elif matriz[i-1][j] < matriz[i][j-1]:  # Se o valor da esquerda for maior, ir para o valor da esquerda
+                if matriz[i-1][j] >= matriz[i][j-1]:  # Se o valor de cima for maior, ir para o valor de cima
+                    i -= 1 
+                else:  # Caso contrário, ir para o valor da esquerda
                     j -= 1
-                else:
-                    i -= 1  # Se os valores forem iguais, pode-se ir tanto para a cima, tanto para a esquerda
+                # OBS: Se os valores forem iguais, pode-se ir tanto para a cima, tanto para a esquerda
         return r
 
 
     matriz = matriz_dinamica_FUN() # Matriz dinâmica
     matriz_preenchida = matriz_preenchida_IMP(matriz) # Matriz preenchida
-
     return reconstrucao_IMP(matriz_preenchida)
-
-
-"""seq1 = input("Primeira sequência: ")
-seq2 = input("Segunda sequência: ")
-lcs = lcs_2_seq(seq1, seq2)
-print(lcs)"""
 
 
 def lcs_3_seq(seq1, seq2, seq3):
@@ -85,23 +73,9 @@ def lcs_3_seq(seq1, seq2, seq3):
     k = len(seq3) + 1
 
     # 1. Inicialização do tensor (todos os valores iguais a 0 e tamanho = (n+1)x(m+1)x(k+1)): 
-
-    # Recursiva
-    def tensor_REC(linhas=n) -> list:
-        if linhas == 0:
-            return []
-        else:
-            def rec_colunas(colunas=m) -> list:
-                if colunas == 0:
-                    return []
-                else:
-                    def rec_profundidade(profundidade=k) -> list:
-                        if profundidade == 0:
-                            return []
-                        else:
-                            return rec_profundidade(profundidade - 1) + [0]
-                    return rec_colunas(colunas - 1) + [rec_profundidade()]
-            return tensor_REC(linhas - 1) + [rec_colunas()]
+    # Recursiva - Não consegui fazer isso ainda. Pensando...
+    def tensor_REC() -> list:
+        ...
 
     # Imperativa
     def tensor_IMP() -> list[list]:
@@ -126,4 +100,59 @@ def lcs_3_seq(seq1, seq2, seq3):
     def tensor_FUN() -> list[list]:
         return [[[0 for _ in range(k)] for _ in range(m)] for _ in range(n)]
 
-lcs_3_seq("AGG", "GXT", "AGG")
+
+    # 2. Preenchimento do tensor
+    def tensor_preenchido_IMP(tensor) -> list[list]:
+        i = 1
+        while i < n:
+            j = 1
+            while j < m:
+                w = 1
+                while w < k:
+                    if seq1[i-1] == seq2[j-1] == seq3[w-1]:
+                        tensor[i][j][w] = tensor[i-1][j-1][w-1] + 1
+                    else:
+                        tensor[i][j][w] = max(tensor[i-1][j][w], tensor[i][j-1][w], tensor[i][j][w-1])
+                    w += 1
+                j += 1
+            i += 1
+        return tensor
+    
+    # 3. Reconstrução da solução
+    def reconstrucao_IMP(tensor) -> str:
+        r = ""
+        i = n - 1  # Variáveis de incremento iniciadas em "n - 1" pois a indexação começa em 0 até "n - 1" (n - 1 é o último elemento)
+        j = m - 1
+        w = k - 1
+        while i > 0 and j > 0 and w > 0:
+            if seq1[i-1] == seq2[j-1] == seq3[w-1]:
+                r = seq1[i-1] + r
+                i -= 1
+                j -= 1
+                w -= 1
+            else:
+                # Decide de qual direção veio o maior valor no tensor
+                if tensor[i-1][j][w] >= tensor[i][j-1][w] and tensor[i-1][j][w] >= tensor[i][j][w-1]:
+                    i -= 1  # Move na primeira sequência
+                elif tensor[i][j-1][w] >= tensor[i-1][j][w] and tensor[i][j-1][w] >= tensor[i][j][w-1]:
+                    j -= 1  # Move na segunda sequência
+                else:
+                    w -= 1  # Move na terceira sequência
+        return r
+    
+    tensor = tensor_FUN()
+    tensor_preenchido = tensor_preenchido_IMP(tensor)
+    return reconstrucao_IMP(tensor_preenchido)
+
+
+if __name__ == "__main__":
+    seq1 = input("Primeira sequência: ")
+    seq2 = input("Segunda sequência: ")
+    lcs2 = lcs_2_seq(seq1, seq2)
+    print(lcs2, "\n\n")
+
+    seq1 = input("Primeira sequência: ")
+    seq2 = input("Segunda sequência: ")
+    seq3 = input("Terceira sequência: ")
+    lcs3 = lcs_3_seq(seq1, seq2, seq3)
+    print(lcs3)
