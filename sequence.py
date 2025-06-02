@@ -19,6 +19,7 @@ class Sequence():
         Returns:
             int: O comprimento da sequência.
         """
+        return len(self.seq)
         ...
     
     def char_at(self, position: int) -> str:
