@@ -20,7 +20,7 @@ class Sequence():
             int: O comprimento da sequência.
         """
         return len(self.seq)
-        ...
+        
     
     def char_at(self, position: int) -> str:
         """
@@ -31,11 +31,9 @@ class Sequence():
 
         Returns:
             str: O caractere na posição especificada.
-
-        Raises:
-            IndexError: Se a posição estiver fora dos limites da sequência.
         """
-        ...
+        return self.seq[position]
+        
     
     def __str__(self) -> str:
         return self.seq
