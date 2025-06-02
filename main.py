@@ -1,6 +1,6 @@
 def lcs_2_seq(seq1, seq2) -> str:
-    n = len(seq1) + 1 # Núemro de linhas
-    m = len(seq2) + 1 # Número de colunas
+    n = len(seq1) + 1 # Número de linhas (tamanho da sequência mais a entrada com valor 0)
+    m = len(seq2) + 1 # Número de colunas (tamanho da sequência mais a entrada com valor 0)
 
     # Imperativa
     def matriz_dinamica_IMP() -> list[list[int]]:
