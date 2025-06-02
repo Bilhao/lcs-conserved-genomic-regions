@@ -2,14 +2,6 @@ def lcs_2_seq(seq1, seq2) -> str:
     n = len(seq1) + 1 # Núemro de linhas
     m = len(seq2) + 1 # Número de colunas
 
-    # 1. Inicialização da matriz dinâmica (todos os valores iguais a 0 e tamanho = (n+1)x(m+1)): 
-    # Recursiva
-    def matriz_dinamica_REC(linhas=n) -> list[list[int]]:
-        if linhas == 0:
-            return []
-        else:
-            return matriz_dinamica_REC(linhas - 1) + [[0] * m]
-
     # Imperativa
     def matriz_dinamica_IMP() -> list[list[int]]:
         r1 = []
