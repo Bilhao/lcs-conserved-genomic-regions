@@ -130,7 +130,7 @@ class LCSFinder():
                         aligned1 = "-" + aligned1
                         aligned2 = self.seq2.char_at(j-1) + aligned2
                         j -= 1
-                    else: 
+                    else: # Se os valores das entradas foram iguais, alinham as letras correspondentes a cada entrada, mesmo sendo diferentes
                         aligned1 = self.seq1.char_at(i-1) + aligned1
                         aligned2 = self.seq2.char_at(j-1) + aligned2
                         i -= 1
