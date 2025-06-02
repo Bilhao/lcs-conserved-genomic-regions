@@ -41,4 +41,3 @@ class Sequence():
         f"> Descrição: {self.description}\n" \
         f"> Sequência: {self.seq}\n"
 
-
