@@ -21,9 +21,9 @@ def lcs_2_seq(seq1, seq2) -> str:
     # 2. Preenchimento da matriz
     def matriz_preenchida_IMP(matriz) -> list[list[int]]:
         i = 1  # Variável de incremento "i" iniciada em 1 pois a primeira linha é preenchida por zeros
-        while i < n:  
+        while i < n + 1:  
             j = 1  # Variável de incremento "j" iniciada em 1 pois a primeira coluna é preenchida por zeros 
-            while j < m:
+            while j < m + 1:
                 if seq1[i-1] == seq2[j-1]:
                     matriz[i][j] = matriz[i-1][j-1] + 1  # Se for igual, será igual ao valor da diagonal anterior + 1
                 else:
@@ -35,8 +35,8 @@ def lcs_2_seq(seq1, seq2) -> str:
     # 3. Reconstrução da solução
     def reconstrucao_IMP(matriz) -> str:
         r = "" 
-        i = n - 1  # Variáveis de incremento iniciadas em "n - 1" pois a indexação começa em 0 até "n - 1" (n - 1 é o último elemento)
-        j = m - 1
+        i = n  # Variáveis de incremento iniciadas em "n - 1" pois a indexação começa em 0 até "n - 1" (n - 1 é o último elemento)
+        j = m
         while i > 0 and j > 0:
             if seq1[i-1] == seq2[j-1]:
                 r = seq1[i-1] + r
