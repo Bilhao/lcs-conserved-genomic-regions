@@ -12,7 +12,7 @@ class SequenceAlignment():
         aligned_seq1 (str): A primeira sequência após reconstrução e alinhamento.
         aligned_seq2 (str): A segunda sequência após reconstrução e alinhamento.
         aligned_seq3 (str, optional): A terceira sequência após o alinhamento. Se não for fornecida, não será usada no alinhamento.
-        score (int): O escore do alinhamento.
+        score (int): O escore do alinhamento. (Não entendi o que esse score representa, mas vou deixar como está)
     """
     def __init__(self, seq1: Sequence, seq2: Sequence, aligned_seq1: str, aligned_seq2: str, score: int, seq3: Sequence = None, aligned_seq3: str = None): # type: ignore
         self.seq1 = seq1
