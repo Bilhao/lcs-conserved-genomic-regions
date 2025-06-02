@@ -17,10 +17,6 @@ def lcs_2_seq(seq1, seq2) -> str:
             i += 1
         return r1
     
-    # Funcional
-    def matriz_dinamica_FUN() -> list[list]:
-        return [[0 for _ in range(m)] for _ in range(n)]
-
 
     # 2. Preenchimento da matriz
     def matriz_preenchida_IMP(matriz) -> list[list[int]]:
