@@ -36,6 +36,9 @@ class Sequence():
         
     
     def __str__(self) -> str:
-        return self.seq
+        return "" \
+        f"> Id: {self.id}\n" \
+        f"> Descrição: {self.description}\n" \
+        f"> Sequência: {self.seq}\n"
 
 
