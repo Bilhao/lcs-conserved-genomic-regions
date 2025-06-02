@@ -6,10 +6,10 @@ def lcs_2_seq(seq1, seq2) -> str:
     def matriz_dinamica_IMP() -> list[list[int]]:
         r1 = []
         i = 0
-        while i < n:
+        while i < n + 1:
             r2 = []
             j = 0
-            while j < m:
+            while j < m + 1:
                 r2.append(0) 
                 j += 1
             r1.append(r2)
