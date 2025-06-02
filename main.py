@@ -2,6 +2,7 @@ def lcs_2_seq(seq1, seq2) -> str:
     n = len(seq1) # Número de linhas (tamanho da sequência)
     m = len(seq2) # Número de colunas (tamanho da sequência)
 
+    # 1. Inicialização da matriz (todos os valores iguais a 0 e tamanho = (n+1)x(m+1)):
     # Imperativa
     def matriz_dinamica_IMP() -> list[list[int]]:
         r1 = []
