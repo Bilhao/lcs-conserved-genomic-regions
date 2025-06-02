@@ -1,4 +1,5 @@
 from sequence import Sequence
+from lcs_finder import LCSFinder
 
 class SequenceAlignment():
     """
@@ -29,6 +30,12 @@ class SequenceAlignment():
         Returns:
             float: A identidade do alinhamento, entre 0 e 1.
         """
+        LCS = LCSFinder(self.seq1, self.seq2, self.seq3)
+        lcs_lenght = LCS.get_lcs_length()
+        alingment_lenght = len(self.aligned_seq1)
+        identity = (lcs_lenght / alingment_lenght) * 100
+
+        return identity 
         ...
     
     def __str__(self) -> str:
