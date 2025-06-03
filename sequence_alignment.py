@@ -30,13 +30,36 @@ class SequenceAlignment():
         Returns:
             float: A identidade do alinhamento, entre 0 e 1.
         """
-        LCS = LCSFinder(self.seq1, self.seq2, self.seq3)
-        lcs_lenght = LCS.get_lcs_length()
-        alingment_lenght = len(self.aligned_seq1)
-        identity = (lcs_lenght / alingment_lenght) * 100
+        lcs = LCSFinder(self.seq1, self.seq2, self.seq3)
+        self.lcs_length = lcs.get_lcs_length()
+        self.alignment_length = len(self.aligned_seq1)
+        identity = (self.lcs_length / self.alignment_length) * 100
 
-        return identity 
-        ...
+        return identity
+    
+    def _identical_positions(self) -> list[int]:
+        """
+        Identifica as posições idênticas entre as sequências alinhadas.
+        Returns:
+            list[int]: Lista de posições onde os caracteres das sequências alinhadas são idênticos.
+        """
+        identical_positions = []
+        if not self.seq3:
+            for i, (a, b) in enumerate(zip(self.aligned_seq1, self.aligned_seq2), 1):
+                if a == b:
+                    identical_positions.append(i)
+        else:
+            for i, (a, b, c) in enumerate(zip(self.aligned_seq1, self.aligned_seq2, self.aligned_seq3), 1):
+                if a == b == c:
+                    identical_positions.append(i)
+        return identical_positions
     
     def __str__(self) -> str:
-        ...
+        return "\n" \
+        f"> Sequência 1: {" ".join(self.aligned_seq1)}\n" \
+        f"> Sequência 2: {" ".join(self.aligned_seq2)}\n" \
+        f"{f'> Sequência 3: {" ".join(self.aligned_seq3)}' if self.seq3 else ''}\n" \
+        f"" \
+        f"> Comprimento do alinhamento = {self.alignment_length}\n" \
+        f"> Posições idênticas nas sequências (✓): {', '.join(map(str, self._identical_positions()))} → total = {self.lcs_length}\n" \
+        f"> Identity = ({self.lcs_length} ÷ {self.alignment_length}) × 100 ≈ {self.identity():.2f}%\n"
