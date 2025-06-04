@@ -15,3 +15,20 @@ class LCSFinder ():
 
         for linha in matriz: #print da matriz
             print(linha)
+
+class Sequence():
+    def __init__(self, ID: str, description: str, seq: str): #define um nome para a sequencia, uma descrição e ela propria
+        self.id = id
+        self.description = description
+        self.seq = seq
+        
+    def length(self): #diz o tamanho da sequencia dada
+        return len(self.seq)
+
+    def char_at(self,position: int): #diz a base nessa posição PRECISO DE ALIGNMENT E NÃO HA ALIGNMENT
+        if position < 0 or position >= len(self.seq):
+            print("Posição não existe")
+        return self.seq[position]
+
+    def __str__(self): #permite dar print à sequência como string
+        return self.seq
