@@ -1,154 +1,122 @@
-def lcs_2_seq(seq1, seq2) -> str:
-    n = len(seq1) # Número de linhas (tamanho da sequência)
-    m = len(seq2) # Número de colunas (tamanho da sequência)
+import os
+from sequence import Sequence
+from sequence_alignment import SequenceAlignment
+from sequence_database import SequenceDatabase
+from lcs_finder import LCSFinder
+from lcs_finder_n_sequences import LCSFinderNSequences
 
-    # 1. Inicialização da matriz (todos os valores iguais a 0 e tamanho = (n+1)x(m+1)):
-    # Imperativa
-    def matriz_dinamica_IMP() -> list[list[int]]:
-        r1 = []
-        i = 0
-        while i < n + 1:
-            r2 = []
-            j = 0
-            while j < m + 1:
-                r2.append(0) 
-                j += 1
-            r1.append(r2)
-            i += 1
-        return r1
-    
-
-    # 2. Preenchimento da matriz
-    def matriz_preenchida_IMP(matriz) -> list[list[int]]:
-        i = 1  # Variável de incremento "i" iniciada em 1 pois a primeira linha é preenchida por zeros
-        while i < n + 1:  
-            j = 1  # Variável de incremento "j" iniciada em 1 pois a primeira coluna é preenchida por zeros 
-            while j < m + 1:
-                if seq1[i-1] == seq2[j-1]:
-                    matriz[i][j] = matriz[i-1][j-1] + 1  # Se for igual, será igual ao valor da diagonal anterior + 1
-                else:
-                    matriz[i][j] = max(matriz[i-1][j], matriz[i][j-1])  # Se não for igual, será o máximo dos valores acima e a esquerda
-                j += 1
-            i += 1
-        return matriz
-
-    # 3. Reconstrução da solução
-    def reconstrucao_IMP(matriz) -> str:
-        r = "" 
-        i = n  # Variáveis de incremento iniciadas em "n - 1" pois a indexação começa em 0 até "n - 1" (n - 1 é o último elemento)
-        j = m
-        while i > 0 and j > 0:
-            if seq1[i-1] == seq2[j-1]:
-                r = seq1[i-1] + r
-                i -= 1
-                j -= 1
+def main():
+    sequences = []
+    while True:
+        os.system('cls' if os.name == 'nt' else 'clear')
+        if not sequences:
+            print("Identificação e Análise de Regiões Genéticas Conservadas usando Subsequências Comuns Mais Longas\n")
+            print("=" * 100, "\n")
+            print("Selecione uma das opções abaixo:\n")
+            print("> 1. Adicionar sequencia para análise")
+            print("> 2. Carregar sequências de um arquivo FASTA")
+        else:
+            print("Sequencias adicionadas:\n")
+            [print(seq) for seq in sequences]
+            print("=" * 100, "\n")
+            print("Selecione uma das opções abaixo:\n")
+            print("> 1. Adicionar sequencia para análise")
+            print("> 2. Carregar sequências de um arquivo FASTA")
+            print("> 3. Calcular LCS entre as sequências")
+            print("> 4. Exibir detalhes do alinhamento")
+            print("> 5. Visualização do LCS e alinhamento")
+            print("> 6. Sair do programa")
+        option = input(": ")
+        if option == "1":
+            print("")
+            seq_id = input("Digite o ID da sequência: ")
+            description = input("Digite a descrição da sequência: ")
+            sequence = input("Digite a sequência: ")
+            seq1 = Sequence(seq_id, description, sequence.upper())
+            sequences.append(seq1)
+            continue
+        elif option == "2":
+            print("")
+            print("Opção 2 selecionada. Carregando sequências de um arquivo FASTA...")
+        elif option == "3":
+            print("")
+            if len(sequences) < 2:
+                print("Por favor, adicione pelo menos duas sequências para calcular o LCS.")
+                input("Pressione Enter para continuar...")
+                continue
+            if len(sequences) == 2:  
+                seq1 = sequences[0]
+                seq2 = sequences[1]
+                lcs_finder = LCSFinder(seq1, seq2)
+                print(f"LCS calculado entre as sequências: {lcs_finder.get_lcs_length()}")
+            elif len(sequences) == 3:
+                seq1 = sequences[0]
+                seq2 = sequences[1]
+                seq3 = sequences[2]
+                lcs_finder = LCSFinder(seq1, seq2, seq3)
+                print(f"LCS calculado entre as sequências: {lcs_finder.get_lcs_length()}")
             else:
-                if matriz[i-1][j] >= matriz[i][j-1]:  # Se o valor de cima for maior, ir para o valor de cima
-                    i -= 1 
-                else:  # Caso contrário, ir para o valor da esquerda
-                    j -= 1
-                # OBS: Se os valores forem iguais, pode-se ir tanto para a cima, tanto para a esquerda
-        return r
-
-    # 4. Identity
-    def identity():
-        ...
-
-    matriz = matriz_dinamica_FUN() # Matriz dinâmica
-    matriz_preenchida = matriz_preenchida_IMP(matriz) # Matriz preenchida
-    return reconstrucao_IMP(matriz_preenchida)
-
-
-def lcs_3_seq(seq1, seq2, seq3):
-    n = len(seq1) + 1
-    m = len(seq2) + 1
-    k = len(seq3) + 1
-
-    # 1. Inicialização do tensor (todos os valores iguais a 0 e tamanho = (n+1)x(m+1)x(k+1)): 
-    # Recursiva - Não consegui fazer isso ainda. Pensando...
-    def tensor_REC() -> list[list[list[int]]]:
-        ...
-
-    # Imperativa
-    def tensor_IMP() -> list[list[list[int]]]:
-        r1 = []
-        i = 0
-        while i < n:
-            r2 = []
-            j = 0
-            while j < m:
-                r3 = []
-                w = 0
-                while w < k:
-                    r3.append(0)
-                    w += 1
-                r2.append(r3)
-                j += 1
-            r1.append(r2)
-            i += 1
-        return r1
-
-    # Funcional
-    def tensor_FUN() -> list[list[list[int]]]:
-        return [[[0 for _ in range(k)] for _ in range(m)] for _ in range(n)]
-
-
-    # 2. Preenchimento do tensor
-    def tensor_preenchido_IMP(tensor) -> list[list[list[int]]]:
-        i = 1
-        while i < n:
-            j = 1
-            while j < m:
-                w = 1
-                while w < k:
-                    if seq1[i-1] == seq2[j-1] == seq3[w-1]:
-                        tensor[i][j][w] = tensor[i-1][j-1][w-1] + 1
-                    else:
-                        tensor[i][j][w] = max(tensor[i-1][j][w], tensor[i][j-1][w], tensor[i][j][w-1])
-                    w += 1
-                j += 1
-            i += 1
-        return tensor
-    
-    # 3. Reconstrução da solução
-    def reconstrucao_IMP(tensor) -> str:
-        r = ""
-        i = n - 1  # Variáveis de incremento iniciadas em "n - 1" pois a indexação começa em 0 até "n - 1" (n - 1 é o último elemento)
-        j = m - 1
-        w = k - 1
-        while i > 0 and j > 0 and w > 0:
-            if seq1[i-1] == seq2[j-1] == seq3[w-1]:
-                r = seq1[i-1] + r
-                i -= 1
-                j -= 1
-                w -= 1
+                lcs_finder = LCSFinderNSequences(sequences)
+                print(f"LCS calculado entre as sequências: {lcs_finder.get_lcs_length()}")
+            input("Pressione Enter para continuar...")
+        elif option == "4":
+            print("")
+            if len(sequences) < 2:
+                print("Por favor, adicione pelo menos duas sequências para exibir os detalhes do alinhamento.")
+                input("Pressione Enter para continuar...")
+                continue
+            if len(sequences) == 2:  
+                seq1 = sequences[0]
+                seq2 = sequences[1]
+                lcs_finder = LCSFinder(seq1, seq2)
+                alignment = lcs_finder.compute_lcs()
+                print("Detalhes do Alinhamento:")
+                print(alignment)
+            elif len(sequences) == 3:
+                seq1 = sequences[0]
+                seq2 = sequences[1]
+                seq3 = sequences[2]
+                lcs_finder = LCSFinder(seq1, seq2, seq3)
+                alignment = lcs_finder.compute_lcs()
+                print("Detalhes do Alinhamento:")
+                print(alignment)
             else:
-                # Decide de qual direção está o maior valor no tensor
-                if tensor[i-1][j][w] >= tensor[i][j-1][w] and tensor[i-1][j][w] >= tensor[i][j][w-1]:
-                    i -= 1  # Move na primeira sequência
-                elif tensor[i][j-1][w] >= tensor[i-1][j][w] and tensor[i][j-1][w] >= tensor[i][j][w-1]:
-                    j -= 1  # Move na segunda sequência
-                else:
-                    w -= 1  # Move na terceira sequência
-        return r
-    
-    # 4. Identity
-    def identity():
-        ...
-    
-    tensor = tensor_FUN()
-    tensor_preenchido = tensor_preenchido_IMP(tensor)
-    return reconstrucao_IMP(tensor_preenchido)
-
+                print("Para mais de 3 sequências, o alinhamento detalhado não está implementado.")
+                input("Pressione Enter para continuar...")
+                continue
+            input("Pressione Enter para continuar...")
+        elif option == "5":
+            print("")
+            if len(sequences) < 2:
+                print("Por favor, adicione pelo menos duas sequências para visualizar o LCS e o alinhamento.")
+                input("Pressione Enter para continuar...")
+                continue
+            if len(sequences) == 2:  
+                seq1 = sequences[0]
+                seq2 = sequences[1]
+                lcs_finder = LCSFinder(seq1, seq2)
+                lcs_finder.visualize()
+            elif len(sequences) == 3:
+                seq1 = sequences[0]
+                seq2 = sequences[1]
+                seq3 = sequences[2]
+                lcs_finder = LCSFinder(seq1, seq2, seq3)
+                lcs_finder.visualize()
+            else:
+                print("Para mais de 3 sequências, a visualização do LCS não está implementada.")
+                input("Pressione Enter para continuar...")
+                continue
+            input("Pressione Enter para continuar...")
+        elif option == "6":
+            print("")
+            print("Saindo do programa...")
+            break
+        else:
+            print("")
+            print("Opção inválida. Por favor, selecione uma opção válida.")
+            input("Pressione Enter para continuar...")
+            continue
 
 if __name__ == "__main__":
-    seq1 = input("Primeira sequência: ")
-    seq2 = input("Segunda sequência: ")
-    lcs2 = lcs_2_seq(seq1, seq2)
-    print(lcs2, "\n")
+    main()
 
-    seq1 = input("Primeira sequência: ")
-    seq2 = input("Segunda sequência: ")
-    seq3 = input("Terceira sequência: ")
-    lcs3 = lcs_3_seq(seq1, seq2, seq3)
-    print(lcs3)
