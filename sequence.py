@@ -9,8 +9,7 @@ class Sequence():
     """
     def __init__(self, id: str, description: str,  seq: str):
         self.id = id
-        self.description = description  #malta tf é a description tou atoa -> é o que a sequencia é, tipo a doença que vamos escolher ou alguma outra coisa que ela representa
-        self.seq = seq
+        self.description = description
 
     def length(self) -> int:
         """
@@ -32,6 +31,7 @@ class Sequence():
         Returns:
             str: O caractere na posição especificada.
         """
+        assert 0 <= position < self.length(), "Posição não existe"
         return self.seq[position]
         
     
