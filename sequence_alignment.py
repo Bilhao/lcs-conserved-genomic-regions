@@ -22,6 +22,8 @@ class SequenceAlignment():
         self.aligned_seq2 = aligned_seq2
         self.aligned_seq3 = aligned_seq3
         self.score = score
+
+        self.alignment_length = len(self.aligned_seq1)
         
     def identity(self) -> float:
         """
@@ -30,7 +32,6 @@ class SequenceAlignment():
         Returns:
             float: A identidade do alinhamento em porcentagem.
         """
-        self.alignment_length = len(self.aligned_seq1)
         identity = (self.score / self.alignment_length) * 100
 
         return identity
