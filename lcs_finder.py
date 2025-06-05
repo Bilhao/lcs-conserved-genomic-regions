@@ -1,5 +1,8 @@
 from sequence import Sequence
 from sequence_alignment import SequenceAlignment
+import plotly.express as px
+import plotly.io as pio
+import numpy as np
 
 
 class LCSFinder():
@@ -44,6 +47,111 @@ class LCSFinder():
     
         return matrix[-1][-1] if self.seq3 is None else matrix[-1][-1][-1]  # Retorna o comprimento do LCS (último elemento da matriz/tensor)
 
+    def visualize(self):
+        pio.renderers.default = "browser"  # Garante o gráfico abrirá no navegador
+
+        matrix = self._dynamic_matrix_initialization()
+        matrix = self._dynamic_matrix_filled(matrix)
+        lcs = self._lcs_reconstruction(matrix)  # Obtém o comprimento do LCS
+        aligned1, aligned2, aligned3 = self._sequence_alignment(lcs)
+        
+        np_matrix = np.array(matrix)  # Converte a matriz para um array NumPy
+
+        if self.seq3 is None:
+            fig = px.imshow(
+                np_matrix.T,  # Transposta para alinhar corretamente as sequências
+                title='LCS - 2 Sequences',
+                labels=dict(x="Sequence 1", y="Sequence 2", color="LCS Value"),
+                text_auto=True,
+            )
+            fig.update_layout(
+                xaxis=dict(tickmode='array', tickvals=list(range(self.seq1.length() + 1)), ticktext=['0'] + list(self.seq1.seq)),
+                yaxis=dict(tickmode='array', tickvals=list(range(self.seq2.length() + 1)), ticktext=['0'] + list(self.seq2.seq)),
+            )
+            fig.update_xaxes(side="top")
+            fig.update_yaxes(autorange="reversed")
+
+            i, j = self.seq1.length(), self.seq2.length()
+            while i > 0 and j > 0:
+                if self.seq1.char_at(i-1) == self.seq2.char_at(j-1):
+                    fig.add_shape(
+                        type="rect",
+                        x0=i - 0.5, x1=i + 0.5,
+                        y0=j - 0.5, y1=j + 0.5,
+                        line=dict(color="black", width=2),
+                        layer="above"
+                    )
+                    fig.add_annotation(
+                        x=i,
+                        y=j,
+                        ax=i - 1,
+                        ay=j - 1,
+                        xref="x",
+                        yref="y",
+                        axref="x",
+                        ayref="y",
+                        showarrow=True,
+                        arrowwidth=2,
+                        arrowhead=5,
+                        arrowside="start",
+                        arrowcolor="red",
+                    )
+                    i -= 1
+                    j -= 1
+                elif matrix[i-1][j] >= matrix[i][j-1]:
+                    fig.add_annotation(
+                        x=i,
+                        y=j,
+                        ax=i - 1,
+                        ay=j,
+                        xref="x",
+                        yref="y",
+                        axref="x",
+                        ayref="y",
+                        showarrow=True,
+                        arrowwidth=2,
+                        arrowhead=5,
+                        arrowside="start",
+                        arrowcolor="red",
+                    )
+                    i -= 1
+                else:
+                    fig.add_annotation(
+                        x=i,
+                        y=j,
+                        ax=i,
+                        ay=j - 1,
+                        xref="x",
+                        yref="y",
+                        axref="x",
+                        ayref="y",
+                        showarrow=True,
+                        arrowwidth=2,
+                        arrowhead=5,
+                        arrowside="start",
+                        arrowcolor="red",
+                    )
+                    j -= 1
+
+            alignment_text = (
+                f"Aligned Sequence 1: {aligned1}<br>"
+                f"Aligned Sequence 2: {aligned2}<br>"
+                f"Conserved subsequence: {lcs}<br>"
+                f"LCS Length: {len(lcs)}<br>"
+            )
+            # Adiciona a anotação do lado direito do gráfico, alinhamento dinâmico
+            fig.add_annotation(
+                text=alignment_text,
+                xref="paper", yref="paper",
+                x=0.9, y=0.5,
+                showarrow=False,
+                font=dict(size=13),
+                xanchor="auto",
+                yanchor="middle",
+            )
+            fig.show()
+        else:
+            ...
 
     def _dynamic_matrix_initialization(self) -> list[list[int]] | list[list[list[int]]]:
         n = self.seq1.length()
