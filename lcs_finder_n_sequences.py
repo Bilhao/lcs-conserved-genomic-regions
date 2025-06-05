@@ -1,6 +1,4 @@
 from sequence import Sequence
-from sequence_alignment import SequenceAlignment
-import numpy as np
 from itertools import product
 
 class LCSFinderNSequences:
@@ -37,8 +35,7 @@ class LCSFinderNSequences:
         """
         dd = self._initialization()
         dd = self._filling(dd)
-        lcs_length = dd[tuple(seq.length() for seq in self.sequences)]
-        
+
         # Reconstrução do LCS a partir do dicionário
         indices = [seq.length() for seq in self.sequences]
         lcs_chars = []
