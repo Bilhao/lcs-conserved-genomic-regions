@@ -15,6 +15,7 @@ def main():
             print("Selecione uma das opções abaixo:\n")
             print("> 1. Adicionar sequencia para análise")
             print("> 2. Carregar sequências de um arquivo FASTA")
+            print("> 3. Sair do programa")
         else:
             print("Sequencias adicionadas:\n")
             [print(seq) for seq in sequences]
@@ -38,7 +39,7 @@ def main():
         elif option == "2":
             print("")
             print("Opção 2 selecionada. Carregando sequências de um arquivo FASTA...")
-        elif option == "3":
+        elif option == "3" and len(sequences) > 0:
             print("")
             if len(sequences) < 2:
                 print("Por favor, adicione pelo menos duas sequências para calcular o LCS.")
@@ -107,7 +108,7 @@ def main():
                 input("Pressione Enter para continuar...")
                 continue
             input("Pressione Enter para continuar...")
-        elif option == "6":
+        elif option == "6" or option == "3" and len(sequences) == 0:
             print("")
             print("Saindo do programa...")
             break
