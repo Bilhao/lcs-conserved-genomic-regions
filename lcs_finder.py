@@ -46,6 +46,18 @@ class LCSFinder():
     
         return matrix[-1][-1] if self.seq3 is None else matrix[-1][-1][-1]  # Retorna o comprimento do LCS (último elemento da matriz/tensor)
 
+    def get_lcs(self) -> str:
+        """
+        Obtém a maior subsequência comum (LCS) entre duas ou três sequências.
+
+        Returns:
+            str: A LCS reconstruída a partir da matriz dinâmica ou tensor preenchido.
+        """
+        matrix = self._dynamic_matrix_initialization()
+        matrix = self._dynamic_matrix_filled(matrix)  # Preenche a matriz dinâmica ou tensor
+        lcs = self._lcs_reconstruction(matrix)  # Reconstrói a subsequência comum mais longa (LCS) usando a matriz dinâmica ou tensor preenchido
+        return lcs  # Retorna a LCS reconstruída a partir da matriz dinâmica ou tensor preenchido
+
     def visualize(self):
         """
         Visualiza o LCS e o alinhamento das sequências usando Plotly.

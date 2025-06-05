@@ -10,7 +10,7 @@ class LCSFinderNSequences:
     def compute_lcs(self):
         ...
     
-    def get_lcs_length(self):
+    def get_lcs_length(self) -> int:
         """
         Calcula o comprimento do LCS (Longest Common Subsequence) para N sequências.
         
@@ -19,12 +19,41 @@ class LCSFinderNSequences:
         com zeros e preenchido iterativamente, considerando se os caracteres atuais das 
         sequências são iguais ou não.
 
-        Retorna o comprimento do LCS para todas as sequências.
+        Returns:
+            int: Comprimento do LCS para as N sequências.
         """
         dd = self._initialization()
         dd = self._filling(dd)
         return dd[tuple(seq.length() for seq in self.sequences)]
     
+    def get_lcs(self) -> str:
+        """
+        Obtém o LCS (Longest Common Subsequence) para N sequências.
+        Utiliza o dicionário preenchido pelo método get_lcs_length para reconstruir o LCS
+        a partir dos índices das sequências.
+
+        Returns:
+            str: O LCS formado pelas N sequências.
+        """
+        dd = self._initialization()
+        dd = self._filling(dd)
+        lcs_length = dd[tuple(seq.length() for seq in self.sequences)]
+        
+        # Reconstrução do LCS a partir do dicionário
+        indices = [seq.length() for seq in self.sequences]
+        lcs_chars = []
+
+        while all(i > 0 for i in indices):
+            chars = [self.sequences[i].seq[indices[i] - 1] for i in range(len(self.sequences))]
+            if all(c == chars[0] for c in chars):
+                lcs_chars.append(chars[0])
+                indices = [i - 1 for i in indices]
+            else:
+                max_index = max(range(len(indices)), key=lambda i: dd[tuple(indices[:i] + [indices[i] - 1] + indices[i + 1:])] if indices[i] > 0 else -1)
+                indices[max_index] -= 1
+
+        return ''.join(reversed(lcs_chars))
+
     def _initialization(self):
         """
         Inicializa um dicionário dinâmico (dd) para o cálculo do LCS de N sequências.
@@ -50,7 +79,7 @@ class LCSFinderNSequences:
         fill([])
         return dd
 
-    def _filling(self, dd):
+    def _filling(self, dd) -> dict:
         """
         Preenche o dicionário dinâmico (dd) com os valores do LCS para todas as combinações de índices.
 
@@ -62,6 +91,12 @@ class LCSFinderNSequences:
               pega o maior valor entre elas e atribui ao estado atual.
 
         No final, dd[tuple(comprimento de cada sequência)] terá o comprimento do LCS para todas.
+
+        Parameters:
+            dd (dict): Dicionário dinâmico inicializado com zeros, onde as chaves são tuplas de índices.
+
+        Returns:
+            dict: Dicionário preenchido com os comprimentos do LCS para todas as combinações de índices.
         """
         lengths = [seq.length() for seq in self.sequences]
         n = len(self.sequences)

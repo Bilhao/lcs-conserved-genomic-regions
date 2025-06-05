@@ -8,7 +8,7 @@ from lcs_finder_n_sequences import LCSFinderNSequences
 def main():
     sequences = []
     while True:
-        os.system('cls' if os.name == 'nt' else 'clear')
+        os.system('cls' if os.name == 'nt' else 'clear')  # Limpa a tela do terminal
         if not sequences:
             print("Identificação e Análise de Regiões Genéticas Conservadas usando Subsequências Comuns Mais Longas\n")
             print("=" * 100, "\n")
@@ -49,16 +49,19 @@ def main():
                 seq1 = sequences[0]
                 seq2 = sequences[1]
                 lcs_finder = LCSFinder(seq1, seq2)
-                print(f"LCS calculado entre as sequências: {lcs_finder.get_lcs_length()}")
+                print(f"Tamanho do LCS entre as sequências: {lcs_finder.get_lcs_length()}")
+                print(f"LCS entre as sequências: {lcs_finder.get_lcs()}")
             elif len(sequences) == 3:
                 seq1 = sequences[0]
                 seq2 = sequences[1]
                 seq3 = sequences[2]
                 lcs_finder = LCSFinder(seq1, seq2, seq3)
-                print(f"LCS calculado entre as sequências: {lcs_finder.get_lcs_length()}")
+                print(f"Tamanho do LCS entre as sequências: {lcs_finder.get_lcs_length()}")
+                print(f"LCS entre as sequências: {lcs_finder.get_lcs()}")
             else:
                 lcs_finder = LCSFinderNSequences(sequences)
-                print(f"LCS calculado entre as sequências: {lcs_finder.get_lcs_length()}")
+                print(f"Tamanho da LCS entre as sequências: {lcs_finder.get_lcs_length()}")
+                print(f"LCS entre as sequências: {lcs_finder.get_lcs()}")
             input("Pressione Enter para continuar...")
         elif option == "4":
             print("")
@@ -82,7 +85,7 @@ def main():
                 print("Detalhes do Alinhamento:")
                 print(alignment)
             else:
-                print("Para mais de 3 sequências, o alinhamento detalhado não está implementado.")
+                print("Para mais de 3 sequências, o alinhamento não está implementado.")
                 input("Pressione Enter para continuar...")
                 continue
             input("Pressione Enter para continuar...")
