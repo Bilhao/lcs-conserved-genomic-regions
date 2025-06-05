@@ -159,6 +159,7 @@ class LCSFinder():
         k = self.seq3.length() if self.seq3 else 0
 
         # 1. Inicialização da matriz dinâmica (todos os valores iguais a 0 e tamanho (n+1) x (m+1):
+        # Imperativa:
         if self.seq3 is None:
             r1 = []
             i = 0
@@ -171,7 +172,6 @@ class LCSFinder():
                 r1.append(r2)
                 i += 1
             return r1
-            # return [[0 for _ in range(m+1)] for _ in range(n+1)]
         else:
             r1 = []
             i = 0
@@ -189,8 +189,14 @@ class LCSFinder():
                 r1.append(r2)
                 i += 1
             return r1
-            # return [[[0 for _ in range(k+1)] for _ in range(m+1)] for _ in range(n+1)]
-    
+        # Funcional:
+        """
+        if self.seq3 is None:
+            return [[0 for _ in range(m+1)] for _ in range(n+1)]
+        else:
+            return [[[0 for _ in range(k+1)] for _ in range(m+1)] for _ in range(n+1)]
+        """
+        
     def _dynamic_matrix_filled(self, matrix: list[list[int]] | list[list[list[int]]]) -> list[list[int]] | list[list[list[int]]]:
         n = self.seq1.length()
         m = self.seq2.length()
