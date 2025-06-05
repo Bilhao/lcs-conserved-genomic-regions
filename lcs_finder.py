@@ -26,9 +26,10 @@ class LCSFinder():
         """
         matrix = self._dynamic_matrix_initialization()  # Inicializa a matriz dinâmica ou tensor
         matrix = self._dynamic_matrix_filled(matrix)  # Preenche a matriz dinâmica ou tensor
-        aligned1, aligned2, aligned3, score = self._subsequence_reconstruction(matrix)  # Reconstrói a subsequência comum mais longa (LCS) usando a matriz dinâmica ou tensor preenchido
+        lcs = self._lcs_reconstruction(matrix)  # Reconstrói a subsequência comum mais longa (LCS) usando a matriz dinâmica ou tensor preenchido
+        aligned1, aligned2, aligned3 = self._sequence_alignment(lcs)  # Alinha as sequencias 
         
-        return SequenceAlignment(self.seq1, self.seq2, aligned1, aligned2, score, self.seq3, aligned3 if self.seq3 else None)
+        return SequenceAlignment(self.seq1, self.seq2, aligned1, aligned2, len(lcs), self.seq3, aligned3 if self.seq3 else None)
         
     
     def get_lcs_length(self) -> int:
@@ -105,102 +106,78 @@ class LCSFinder():
                             matrix[i][j][w] = max(matrix[i-1][j][w], matrix[i][j-1][w], matrix[i][j][w-1])
         return matrix  # Retorna a matriz preenchida ou o tensor preenchido
     
-    def _subsequence_reconstruction(self, matrix):
-        n = self.seq1.length()
-        m = self.seq2.length()
+    def _lcs_reconstruction(self, matrix) -> str:
+        lcs = "" 
+        i = self.seq1.length()
+        j = self.seq2.length()
         k = self.seq3.length() if self.seq3 else 0
 
-        # 3. Reconstrução da subsequência comum mais longa (LCS) usando a matriz dinâmica ou tensor preenchido       
-        aligned1, aligned2, aligned3= "", "", ""  # Variáveis para armazenar os alinhamentos
-        i, j, w = n, m, k  # Começa do final da matriz
-
+        # 3. Reconstrução da subsequência comum mais longa (LCS) usando a matriz dinâmica ou tensor preenchido
         if not self.seq3:
             while i > 0 and j > 0:
-                if self.seq1.char_at(i-1) == self.seq2.char_at(j-1):  # Se os caracteres forem iguais, adiciona ao alinhamento e vai para a diagonal
-                    aligned1 = self.seq1.char_at(i-1) + aligned1
-                    aligned2 = self.seq2.char_at(j-1) + aligned2
+                if self.seq1.char_at(i-1) == self.seq2.char_at(j-1):
+                    lcs = self.seq1.char_at(i-1) + lcs
                     i -= 1
                     j -= 1
-                else: 
-                    if matrix[i-1][j] > matrix[i][j-1]: # Se o valor de cima for maior, ir para o valor de cima
-                        aligned1 = self.seq1.char_at(i-1) + aligned1
-                        aligned2 = "-" + aligned2
-                        i -= 1
-                    elif matrix[i-1][j] < matrix[i][j-1]: # Se o valor da esquerda for maior, ir para o valor da esquerda
-                        aligned1 = "-" + aligned1
-                        aligned2 = self.seq2.char_at(j-1) + aligned2
+                else:
+                    if matrix[i-1][j] >= matrix[i][j-1]:  # Se o valor de cima for maior ou igual, ir para o valor de cima
+                        i -= 1 
+                    else:  # Caso contrário, ir para o valor da esquerda
                         j -= 1
-                    else: # Se os valores das entradas foram iguais, alinham as letras correspondentes a cada entrada, mesmo sendo diferentes
-                        aligned1 = self.seq1.char_at(i-1) + aligned1
-                        aligned2 = self.seq2.char_at(j-1) + aligned2
-                        i -= 1
-                        j -= 1
-        else: 
+                    # OBS: Se os valores forem iguais, pode-se ir tanto para a cima, tanto para a esquerda, no caso foi escolhido ir para cima
+            return lcs
+        else:
             while i > 0 and j > 0 and w > 0:
-                if self.seq1.char_at(i-1) == self.seq2.char_at(j-1) == self.seq3.char_at(w-1):  # Se os caracteres forem iguais, adiciona ao alinhamento
-                    aligned1 = self.seq1.char_at(i-1) + aligned1
-                    aligned2 = self.seq2.char_at(j-1) + aligned2
-                    aligned3 = self.seq3.char_at(w-1) + aligned3
+                if self.seq1.char_at(i-1) == self.seq2.char_at(j-1) == self.seq3.char_at(w-1):
+                    lcs = self.seq1.char_at(i-1) + lcs
                     i -= 1
                     j -= 1
                     w -= 1
                 else:
-                    if matrix[i-1][j][w] > matrix[i][j-1][w] > matrix[i][j][w-1] or matrix[i-1][j][w] > matrix[i][j][w-1] > matrix[i][j-1][w]:
-                        aligned1 = self.seq1.char_at(i-1) + aligned1
-                        aligned2 = "-" + aligned2
-                        aligned3 = "-" + aligned3
-                        i -= 1
-                    elif matrix[i][j-1][w] > matrix[i-1][j][w] > matrix[i][j][w-1] or matrix[i][j-1][w] > matrix[i][j][w-1] > matrix[i-1][j][w]:
-                        aligned1 = "-" + aligned1
-                        aligned2 = self.seq2.char_at(j-1) + aligned2
-                        aligned3 = "-" + aligned3
-                        j -= 1
-                    elif matrix[i][j][w-1] > matrix[i-1][j][w] > matrix[i][j-1][w] or matrix[i][j][w-1] > matrix[i][j-1][w] > matrix[i-1][j][w]:
-                        aligned1 = "-" + aligned1
-                        aligned2 = "-" + aligned2
-                        aligned3 = self.seq3.char_at(w-1) + aligned3
-                        w -= 1
-                    elif matrix[i-1][j][w] == matrix[i][j-1][w] > matrix[i][j][w-1]:
-                        aligned1 = self.seq1.char_at(i-1) + aligned1
-                        aligned2 = self.seq2.char_at(j-1) + aligned2
-                        aligned3 = "-" + aligned3
-                        i -= 1
-                        j -= 1
-                    elif matrix[i-1][j][w] == matrix[i][j][w-1] > matrix[i][j-1][w]:
-                        aligned1 = self.seq1.char_at(i-1) + aligned1
-                        aligned2 = "-" + aligned2
-                        aligned3 = self.seq3.char_at(w-1) + aligned3
-                        i -= 1
-                        w -= 1
-                    elif matrix[i][j-1][w] == matrix[i][j][w-1] > matrix[i-1][j][w]:
-                        aligned1 = "-" + aligned1
-                        aligned2 = self.seq2.char_at(j-1) + aligned2
-                        aligned3 = self.seq3.char_at(w-1) + aligned3
-                        j -= 1
-                        w -= 1
-                    elif matrix[i-1][j][w] == matrix[i][j-1][w] < matrix[i][j][w-1]:
-                        aligned1 = "-" + aligned1
-                        aligned2 = "-" + aligned2
-                        aligned3 = self.seq3.char_at(w-1) + aligned3
-                        w -= 1
-                    elif matrix[i-1][j][w] == matrix[i][j][w-1] < matrix[i][j-1][w]:
-                        aligned1 = "-" + aligned1
-                        aligned2 = self.seq2.char_at(j-1) + aligned2
-                        aligned3 = "-" + aligned3
-                        j -= 1
-                    elif matrix[i][j-1][w] == matrix[i][j][w-1] < matrix[i-1][j][w]:
-                        aligned1 = self.seq1.char_at(i-1) + aligned1
-                        aligned2 = "-" + aligned2
-                        aligned3 = "-" + aligned3
-                        i -= 1
+                    # Decide de qual direção está o maior valor no tensor
+                    if matrix[i-1][j][w] >= matrix[i][j-1][w] and matrix[i-1][j][w] >= matrix[i][j][w-1]:
+                        i -= 1  # Ir para cima
+                    elif matrix[i][j-1][w] >= matrix[i-1][j][w] and matrix[i][j-1][w] >= matrix[i][j][w-1]:
+                        j -= 1  # Ir para esquerda
                     else:
-                        aligned1 = self.seq1.char_at(i-1) + aligned1
-                        aligned2 = self.seq2.char_at(j-1) + aligned2
-                        aligned3 = self.seq3.char_at(w-1) + aligned3
-                        i -= 1
-                        j -= 1
-                        w -= 1
+                        w -= 1  # Ir para frente
+                    # OBS: Se os valores forem iguais, pode-se ir tanto para a cima, tanto para a esquerda, tanto para frente.
+            return lcs
+
+    def _sequence_alignment(self, lcs: str) -> tuple[str, str, str]:
+        n = self.seq1.length()
+        m = self.seq2.length()
+        k = self.seq3.length() if self.seq3 else 0
+
+        # Alinhamento das sequências       
+        aligned1, aligned2, aligned3= "", "", ""  # Variáveis para armazenar os alinhamentos
+        i, j, w = 0, 0, 0  # Índices para percorrer as sequências 
+        l = 0  # Índice para percorrer a LCS
+        if not self.seq3:
+            while l < len(lcs):
+                while i < n and self.seq1.char_at(i) != lcs[l]:  # Se o caractere da seq1 não for igual ao caractere da LCS, adiciona traços
+                    aligned1 += self.seq1.char_at(i)
+                    aligned2 += "-"
+                    i += 1
+                while j < m and self.seq2.char_at(j) != lcs[l]:  # Se o caractere da seq2 não for igual ao caractere da LCS, adiciona traços
+                    aligned1 += "-"
+                    aligned2 += self.seq2.char_at(j)
+                    j += 1
+                aligned1 += self.seq1.char_at(i)  # Adiciona o caractere da LCS
+                aligned2 += self.seq2.char_at(j)
+                i += 1
+                j += 1
+                l += 1
+            aligned1 += self.seq1.seq[i:] # Adiciona o restante da sequência seq1
+            aligned2 += self.seq2.seq[j:] # Adiciona o restante da sequência seq2
+            if len(aligned1) < len(aligned2):
+                aligned1 += "-" * (len(aligned2) - len(aligned1))  # Preenche com traços se necessário
+            elif len(aligned2) < len(aligned1):
+                aligned2 += "-" * (len(aligned1) - len(aligned2))
+
+        else: 
+            ...
                 
-        return aligned1, aligned2, aligned3, matrix[n][m] if not self.seq3 else matrix[n][m][k]
+        return aligned1, aligned2, aligned3
 
     
