@@ -1,5 +1,4 @@
 from sequence import Sequence
-from lcs_finder import LCSFinder
 
 class SequenceAlignment():
     """
@@ -13,7 +12,7 @@ class SequenceAlignment():
         aligned_seq1 (str): A primeira sequência após reconstrução e alinhamento.
         aligned_seq2 (str): A segunda sequência após reconstrução e alinhamento.
         aligned_seq3 (str, optional): A terceira sequência após o alinhamento. Se não for fornecida, não será usada no alinhamento.
-        score (int): É o comprimento do alinhamento (implementação opcional)
+        score (int): É o tamanho do lcs (implementação opcional)
     """
     def __init__(self, seq1: Sequence, seq2: Sequence, aligned_seq1: str, aligned_seq2: str, score: int, seq3: Sequence = None, aligned_seq3: str = None): # type: ignore
         self.seq1 = seq1
@@ -29,12 +28,10 @@ class SequenceAlignment():
         Calcula a identidade do alinhamento, que é a proporção de caracteres idênticos entre as sequências alinhadas.
         
         Returns:
-            float: A identidade do alinhamento, entre 0 e 1.
+            float: A identidade do alinhamento em porcentagem.
         """
-        lcs = LCSFinder(self.seq1, self.seq2, self.seq3)
-        self.lcs_length = lcs.get_lcs_length()
         self.alignment_length = len(self.aligned_seq1)
-        identity = (self.lcs_length / self.alignment_length) * 100
+        identity = (self.score / self.alignment_length) * 100
 
         return identity
     
@@ -63,5 +60,5 @@ class SequenceAlignment():
         f"{f'> Sequência 3: {" ".join(self.aligned_seq3)}' if self.seq3 else ''}\n" \
         f"" \
         f"> Comprimento do alinhamento = {self.alignment_length}\n" \
-        f"> Posições idênticas nas sequências (✓): {', '.join(map(str, self._identical_positions()))} → total = {self.lcs_length}\n" \
-        f"> Identity = ({self.lcs_length} ÷ {self.alignment_length}) × 100 ≈ {self.identity():.2f}%\n"
+        f"> Posições idênticas nas sequências (✓): {', '.join(map(str, self._identical_positions()))} → total = {self.score}\n" \
+        f"> Identity = ({self.score} ÷ {self.alignment_length}) × 100 ≈ {self.identity():.2f}%\n"
