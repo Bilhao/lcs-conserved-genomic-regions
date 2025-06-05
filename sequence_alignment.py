@@ -27,6 +27,7 @@ class SequenceAlignment():
     def identity(self) -> float:
         """
         Calcula a identidade do alinhamento, que é a proporção de caracteres idênticos entre as sequências alinhadas.
+        
         Returns:
             float: A identidade do alinhamento, entre 0 e 1.
         """
@@ -40,6 +41,7 @@ class SequenceAlignment():
     def _identical_positions(self) -> list[int]:
         """
         Identifica as posições idênticas entre as sequências alinhadas.
+        
         Returns:
             list[int]: Lista de posições onde os caracteres das sequências alinhadas são idênticos.
         """

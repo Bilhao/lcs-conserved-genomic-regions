@@ -19,7 +19,6 @@ class Sequence():
             int: O comprimento da sequência.
         """
         return len(self.seq)
-        
     
     def char_at(self, position: int) -> str:
         """
@@ -34,7 +33,6 @@ class Sequence():
         assert 0 <= position < self.length(), "Posição não existe"
         return self.seq[position]
         
-    
     def __str__(self) -> str:
         return "" \
         f"> Id: {self.id}\n" \

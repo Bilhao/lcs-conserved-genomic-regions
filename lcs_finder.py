@@ -1,7 +1,6 @@
 from sequence import Sequence
 from sequence_alignment import SequenceAlignment
 import plotly.express as px
-import plotly.io as pio
 import numpy as np
 
 
@@ -48,8 +47,10 @@ class LCSFinder():
         return matrix[-1][-1] if self.seq3 is None else matrix[-1][-1][-1]  # Retorna o comprimento do LCS (último elemento da matriz/tensor)
 
     def visualize(self):
-        pio.renderers.default = "browser"  # Garante o gráfico abrirá no navegador
-
+        """
+        Visualiza o LCS e o alinhamento das sequências usando Plotly.
+        Esta função cria um gráfico interativo que mostra a matriz de LCS e as setas indicando o alinhamento das sequências.
+        """
         matrix = self._dynamic_matrix_initialization()
         matrix = self._dynamic_matrix_filled(matrix)
         lcs = self._lcs_reconstruction(matrix)  # Obtém o comprimento do LCS
@@ -149,11 +150,17 @@ class LCSFinder():
                 xanchor="auto",
                 yanchor="middle",
             )
-            fig.show()
+            fig.show(renderer="browser")  # Exibe o gráfico no navegador
         else:
             ...
 
     def _dynamic_matrix_initialization(self) -> list[list[int]] | list[list[list[int]]]:
+        """
+        Inicializa a matriz dinâmica ou tensor para armazenar os valores de LCS.
+        
+        Returns:
+            list[list[int]] | list[list[list[int]]]: A matriz dinâmica ou tensor inicializado com zeros.
+        """
         n = self.seq1.length()
         m = self.seq2.length()
         k = self.seq3.length() if self.seq3 else 0
@@ -196,8 +203,17 @@ class LCSFinder():
         else:
             return [[[0 for _ in range(k+1)] for _ in range(m+1)] for _ in range(n+1)]
         """
-        
+
     def _dynamic_matrix_filled(self, matrix: list[list[int]] | list[list[list[int]]]) -> list[list[int]] | list[list[list[int]]]:
+        """
+        Preenche a matriz dinâmica ou tensor com os valores de LCS usando programação dinâmica.
+        
+        Parameters:
+            matrix (list[list[int]] | list[list[list[int]]]): A matriz dinâmica ou tensor inicializado com zeros.
+        
+        Returns:
+            list[list[int]] | list[list[list[int]]]: A matriz dinâmica ou tensor preenchido com os valores de LCS.
+        """
         n = self.seq1.length()
         m = self.seq2.length()
         k = self.seq3.length() if self.seq3 else 0
@@ -221,6 +237,15 @@ class LCSFinder():
         return matrix  # Retorna a matriz preenchida ou o tensor preenchido
     
     def _lcs_reconstruction(self, matrix) -> str:
+        """
+        Reconstrói a subsequência comum mais longa (LCS) a partir da matriz dinâmica ou tensor preenchido.
+        
+        Parameters:
+            matrix (list[list[int]] | list[list[list[int]]]): A matriz dinâmica ou tensor preenchido com os valores de LCS.
+        
+        Returns:
+            str: A subsequência comum mais longa (LCS) reconstruída a partir da matriz dinâmica ou tensor preenchido.
+        """
         lcs = "" 
         i = self.seq1.length()
         j = self.seq2.length()
@@ -259,6 +284,15 @@ class LCSFinder():
             return lcs
 
     def _sequence_alignment(self, lcs: str) -> tuple[str, str, str]:
+        """
+        Alinha as sequências com base na subsequência comum mais longa (LCS) reconstruída.
+        
+        Parameters:
+            lcs (str): A subsequência comum mais longa (LCS) reconstruída a partir da matriz dinâmica ou tensor preenchido.
+        
+        Returns:
+            tuple[str, str, str]: As sequências alinhadas (seq1, seq2, seq3) com base na LCS.
+        """
         n = self.seq1.length()
         m = self.seq2.length()
         k = self.seq3.length() if self.seq3 else 0
