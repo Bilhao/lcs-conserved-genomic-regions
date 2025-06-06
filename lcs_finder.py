@@ -76,7 +76,6 @@ class LCSFinder():
                 title='LCS - 2 Sequences',
                 labels=dict(x="Sequence 1", y="Sequence 2", color="LCS Value"),
                 text_auto=True,
-                aspect="auto",
             )
             fig.update_layout(
                 xaxis=dict(tickmode='array', tickvals=list(range(self.seq1.length() + 1)), ticktext=['0'] + list(self.seq1.seq)),
@@ -157,7 +156,7 @@ class LCSFinder():
             fig.add_annotation(
                 text=alignment_text,
                 xref="paper", yref="paper",
-                x=0.9, y=0.5,
+                x=0.5, y=-1.1,
                 showarrow=False,
                 font=dict(size=13),
                 xanchor="auto",

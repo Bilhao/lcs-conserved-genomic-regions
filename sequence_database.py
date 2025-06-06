@@ -6,7 +6,7 @@ class SequenceDatabase():
     Esta classe permite adicionar sequências, buscar sequências por ID e carregar sequências de um arquivo FASTA.
     """
     def __init__(self):
-    self.base_de_dados = []
+        self.database = []
 
     def add_sequence(self, sequence: Sequence):
         """
@@ -26,9 +26,6 @@ class SequenceDatabase():
         
         Returns:
             Sequence: A sequência correspondente ao ID fornecido.
-        
-        Raises:
-            KeyError: Se a sequência com o ID fornecido não for encontrada.
         """
         ...
 
@@ -38,10 +35,6 @@ class SequenceDatabase():
         
         Parameters:
             filename (str): O caminho do arquivo FASTA a ser carregado.
-        
-        Raises:
-            FileNotFoundError: Se o arquivo não for encontrado.
-            ValueError: Se o arquivo não estiver no formato FASTA válido.
         """
         sequences = {}
         with open(filename, 'r') as file:

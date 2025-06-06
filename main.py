@@ -26,7 +26,8 @@ def main():
             print("> 3. Calcular LCS entre as sequências")
             print("> 4. Exibir detalhes do alinhamento")
             print("> 5. Visualização do LCS e alinhamento")
-            print("> 6. Sair do programa")
+            print("> 6. Remover sequências")
+            print("> 7. Sair do programa")
         option = input(": ")
         if option == "1":
             print("")
@@ -38,7 +39,23 @@ def main():
             continue
         elif option == "2":
             print("")
-            print("Opção 2 selecionada. Carregando sequências de um arquivo FASTA...")
+            filename = input("Digite o caminho do arquivo FASTA: ")
+            if not os.path.isfile(filename):
+                print("Arquivo não encontrado. Por favor, verifique o caminho e tente novamente.")
+                input("Pressione Enter para continuar...")
+                continue
+            try:
+                sequence_db = SequenceDatabase()
+                sequences_from_file = sequence_db.load_from_fasta(filename)
+                for seq_id, seq in sequences_from_file.items():
+                    seq_obj = Sequence(seq_id, "", seq.upper())
+                    sequences.append(seq_obj)
+                print(f"{len(sequences_from_file)} sequências carregadas com sucesso do arquivo {filename}.")
+                input("Pressione Enter para continuar...")
+            except (FileNotFoundError, ValueError) as e:
+                print(f"Erro ao carregar o arquivo: {e}")
+                input("Pressione Enter para continuar...")
+                continue
         elif option == "3" and len(sequences) > 0:
             print("")
             if len(sequences) < 2:
@@ -61,9 +78,9 @@ def main():
             else:
                 lcs_finder = LCSFinderNSequences(sequences)
                 print(f"Tamanho da LCS entre as sequências: {lcs_finder.get_lcs_length()}")
-                print(f"LCS entre as sequências: {lcs_finder.get_lcs()}")
+                print(f"LCS entre as sequências: {lcs_finder.get_lcs()}\n")
             input("Pressione Enter para continuar...")
-        elif option == "4":
+        elif option == "4" and len(sequences) > 0:
             print("")
             if len(sequences) < 2:
                 print("Por favor, adicione pelo menos duas sequências para exibir os detalhes do alinhamento.")
@@ -89,7 +106,7 @@ def main():
                 input("Pressione Enter para continuar...")
                 continue
             input("Pressione Enter para continuar...")
-        elif option == "5":
+        elif option == "5" and len(sequences) > 0:
             print("")
             if len(sequences) < 2:
                 print("Por favor, adicione pelo menos duas sequências para visualizar o LCS e o alinhamento.")
@@ -111,7 +128,23 @@ def main():
                 input("Pressione Enter para continuar...")
                 continue
             input("Pressione Enter para continuar...")
-        elif option == "6" or option == "3" and len(sequences) == 0:
+        elif option == "6" and len(sequences) > 0:
+            print("")
+            print("Selecione a sequência a ser removida:")
+            for i, seq in enumerate(sequences, start=1):
+                print(f"{i}. {seq.id} - {seq.description}")
+            print(f"{len(sequences) + 1}. Cancelar")
+            choice = input(": ")
+            if choice.isdigit() and 1 <= int(choice) <= len(sequences):
+                removed_seq = sequences.pop(int(choice) - 1)
+                print(f"Sequência {removed_seq.id} removida.")
+            elif choice == str(len(sequences) + 1):
+                print("Operação cancelada.")
+            else:
+                print("Opção inválida. Nenhuma sequência foi removida.")
+            input("Pressione Enter para continuar...")
+
+        elif option == "7" or option == "3" and len(sequences) == 0:
             print("")
             print("Saindo do programa...")
             break
