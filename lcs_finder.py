@@ -336,7 +336,82 @@ class LCSFinder():
                 aligned2 += "-" * (len(aligned1) - len(aligned2))
 
         else: 
-            ...
+            while l < len(lcs):
+                while i < n and self.seq1.char_at(i) != lcs[l]:
+                    if self.seq1.char_at(i) == self.seq2.char_at(j):
+                        aligned1 += self.seq1.char_at(i)
+                        aligned2 += self.seq2.char_at(j)
+                        aligned3 += "-"
+                        i += 1
+                        j += 1
+                    elif self.seq1.char_at(i) == self.seq3.char_at(w):
+                        aligned1 += self.seq1.char_at(i)
+                        aligned2 += "-"
+                        aligned3 += self.seq3.char_at(w)
+                        i += 1
+                        w += 1
+                    elif self.seq2.char_at(j) == self.seq3.char_at(w):
+                        aligned1 += "-"
+                        aligned2 += self.seq2.char_at(j)
+                        aligned3 += self.seq3.char_at(w)
+                        j += 1
+                        w += 1
+                    else: 
+                        aligned1 += self.seq1.char_at(i)
+                        aligned2 += "-"
+                        aligned3 += "-"
+                        i += 1
+                while j < m and self.seq2.char_at(j) != lcs[l]:
+                    if self.seq2.char_at(j) == self.seq1.char_at(i):
+                        aligned1 += self.seq1.char_at(i)
+                        aligned2 += self.seq2.char_at(j)
+                        aligned3 += "-"
+                        i += 1
+                        j += 1
+                    elif self.seq2.char_at(j) == self.seq3.char_at(w):
+                        aligned1 += "-"
+                        aligned2 += self.seq2.char_at(j)
+                        aligned3 += self.seq3.char_at(w)
+                        j += 1
+                        w += 1
+                    elif self.seq1.char_at(i) == self.seq3.char_at(w):
+                        aligned1 += self.seq1.char_at(i)
+                        aligned2 += "-"
+                        aligned3 += self.seq3.char_at(w)
+                        i += 1
+                        w += 1
+                    else:
+                        aligned1 += "-"
+                        aligned2 += self.seq2.char_at(j)
+                        aligned3 += "-"
+                while w < k and self.seq3.char_at(w) != lcs[l]:
+                    if self.seq3.char_at(w) == self.seq1.char_at(i):
+                        aligned1 += self.seq1.char_at(i)
+                        aligned2 += "-"
+                        aligned3 += self.seq3.char_at(w)
+                    elif self.seq3.char_at(w) == self.seq2.char_at(j):
+                        aligned1 += "-"
+                        aligned2 += self.seq2.char_at(j)
+                        aligned3 += self.seq3.char_at(w)
+                    elif self.seq1.char_at(i) == self.seq2.char_at(j):
+                        aligned1 += self.seq1.char_at(i)
+                        aligned2 += self.seq2.char_at(j)
+                        aligned3 += "-"
+                    else:
+                        aligned1 += "-"
+                        aligned2 += "-"
+                        aligned3 += self.seq3.char_at(w)
+            aligned1 += self.seq1.seq[i:] # Adiciona o restante da sequência seq1
+            aligned2 += self.seq2.seq[j:] # Adiciona o restante da sequência seq2
+            aligned3 += self.seq3.seq[w:] # Adiciona o restante da sequência seq3
+            
+            alignment_lenght = max(len(aligned1), len(aligned2), len(aligned3))
+            if len(aligned1) < alignment_lenght:
+                aligned1 += "-" * (alignment_lenght - len(aligned1))  # Preenche com traços se necessário
+            elif len(aligned2) < alignment_lenght:
+                aligned2 += "-" * (alignment_lenght - len(aligned2))
+            elif len(aligned3) < alignment_lenght:
+                aligned3 += "-" * (alignment_lenght - len(aligned3))
                 
         return aligned1, aligned2, aligned3
 
