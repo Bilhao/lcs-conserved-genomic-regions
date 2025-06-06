@@ -58,8 +58,8 @@ class SequenceAlignment():
         return "\n" \
         f"> Sequência 1: {" ".join(self.aligned_seq1)}\n" \
         f"> Sequência 2: {" ".join(self.aligned_seq2)}\n" \
-        f"{f'> Sequência 3: {" ".join(self.aligned_seq3)}' if self.seq3 else ''}\n" \
-        f"" \
+        f"> Sequência 3: {" ".join(self.aligned_seq3) + "\n" if self.seq3 else ''}" \
+        f"\n" \
         f"> Comprimento do alinhamento = {self.alignment_length}\n" \
         f"> Posições idênticas nas sequências (✓): {', '.join(map(str, self._identical_positions()))} → total = {self.score}\n" \
         f"> Identity = ({self.score} ÷ {self.alignment_length}) × 100 ≈ {self.identity():.2f}%\n"

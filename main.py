@@ -122,5 +122,12 @@ def main():
             continue
 
 if __name__ == "__main__":
-    main()
+    seq1 = Sequence("seq1", "Descrição da sequência 1", "ATGCTGT")
+    seq2 = Sequence("seq2", "Descrição da sequência 2", "ATGGTTG")
+    seq3 = Sequence("seq3", "Descrição da sequência 3", "ACTTACG")
+
+    lcs = LCSFinder(seq1, seq2, seq3)
+    alignment = lcs.compute_lcs()
+    print(alignment)
+    #main()
 
