@@ -409,6 +409,13 @@ class LCSFinder():
                         aligned2 += "-"
                         aligned3 += self.seq3.char_at(k)
                         k += 1
+                aligned1 += self.seq1.char_at(i)
+                aligned2 += self.seq2.char_at(j)
+                aligned3 += self.seq3.char_at(k)
+                i += 1
+                j += 1
+                k += 1
+                l += 1
             aligned1 += self.seq1.seq[i:] # Adiciona o restante da sequência seq1
             aligned2 += self.seq2.seq[j:] # Adiciona o restante da sequência seq2
             aligned3 += self.seq3.seq[k:] # Adiciona o restante da sequência seq3
