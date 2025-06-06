@@ -278,20 +278,20 @@ class LCSFinder():
                     # OBS: Se os valores forem iguais, pode-se ir tanto para a cima, tanto para a esquerda, no caso foi escolhido ir para cima
             return lcs
         else:
-            while i > 0 and j > 0 and w > 0:
-                if self.seq1.char_at(i-1) == self.seq2.char_at(j-1) == self.seq3.char_at(w-1):
+            while i > 0 and j > 0 and k > 0:
+                if self.seq1.char_at(i-1) == self.seq2.char_at(j-1) == self.seq3.char_at(k-1):
                     lcs = self.seq1.char_at(i-1) + lcs
                     i -= 1
                     j -= 1
-                    w -= 1
+                    k -= 1
                 else:
                     # Decide de qual direção está o maior valor no tensor
-                    if matrix[i-1][j][w] >= matrix[i][j-1][w] and matrix[i-1][j][w] >= matrix[i][j][w-1]:
+                    if matrix[i-1][j][k] >= matrix[i][j-1][k] and matrix[i-1][j][k] >= matrix[i][j][k-1]:
                         i -= 1  # Ir para cima
-                    elif matrix[i][j-1][w] >= matrix[i-1][j][w] and matrix[i][j-1][w] >= matrix[i][j][w-1]:
+                    elif matrix[i][j-1][k] >= matrix[i-1][j][k] and matrix[i][j-1][k] >= matrix[i][j][k-1]:
                         j -= 1  # Ir para esquerda
                     else:
-                        w -= 1  # Ir para frente
+                        k -= 1  # Ir para frente
                     # OBS: Se os valores forem iguais, pode-se ir tanto para a cima, tanto para a esquerda, tanto para frente.
             return lcs
 
@@ -307,11 +307,11 @@ class LCSFinder():
         """
         n = self.seq1.length()
         m = self.seq2.length()
-        k = self.seq3.length() if self.seq3 else 0
+        w = self.seq3.length() if self.seq3 else 0
 
         # Alinhamento das sequências       
         aligned1, aligned2, aligned3= "", "", ""  # Variáveis para armazenar os alinhamentos
-        i, j, w = 0, 0, 0  # Índices para percorrer as sequências 
+        i, j, k = 0, 0, 0  # Índices para percorrer as sequências 
         l = 0  # Índice para percorrer a LCS
         if not self.seq3:
             while l < len(lcs):
@@ -344,18 +344,18 @@ class LCSFinder():
                         aligned3 += "-"
                         i += 1
                         j += 1
-                    elif self.seq1.char_at(i) == self.seq3.char_at(w):
+                    elif self.seq1.char_at(i) == self.seq3.char_at(k):
                         aligned1 += self.seq1.char_at(i)
                         aligned2 += "-"
-                        aligned3 += self.seq3.char_at(w)
+                        aligned3 += self.seq3.char_at(k)
                         i += 1
-                        w += 1
-                    elif self.seq2.char_at(j) == self.seq3.char_at(w):
+                        k += 1
+                    elif self.seq2.char_at(j) == self.seq3.char_at(k):
                         aligned1 += "-"
                         aligned2 += self.seq2.char_at(j)
-                        aligned3 += self.seq3.char_at(w)
+                        aligned3 += self.seq3.char_at(k)
                         j += 1
-                        w += 1
+                        k += 1
                     else: 
                         aligned1 += self.seq1.char_at(i)
                         aligned2 += "-"
@@ -368,42 +368,50 @@ class LCSFinder():
                         aligned3 += "-"
                         i += 1
                         j += 1
-                    elif self.seq2.char_at(j) == self.seq3.char_at(w):
+                    elif self.seq2.char_at(j) == self.seq3.char_at(k):
                         aligned1 += "-"
                         aligned2 += self.seq2.char_at(j)
-                        aligned3 += self.seq3.char_at(w)
+                        aligned3 += self.seq3.char_at(k)
                         j += 1
-                        w += 1
-                    elif self.seq1.char_at(i) == self.seq3.char_at(w):
+                        k += 1
+                    elif self.seq1.char_at(i) == self.seq3.char_at(k):
                         aligned1 += self.seq1.char_at(i)
                         aligned2 += "-"
-                        aligned3 += self.seq3.char_at(w)
+                        aligned3 += self.seq3.char_at(k)
                         i += 1
-                        w += 1
+                        k += 1
                     else:
                         aligned1 += "-"
                         aligned2 += self.seq2.char_at(j)
                         aligned3 += "-"
-                while w < k and self.seq3.char_at(w) != lcs[l]:
-                    if self.seq3.char_at(w) == self.seq1.char_at(i):
+                        j += 1
+                while k < w and self.seq3.char_at(k) != lcs[l]:
+                    if self.seq3.char_at(k) == self.seq1.char_at(i):
                         aligned1 += self.seq1.char_at(i)
                         aligned2 += "-"
-                        aligned3 += self.seq3.char_at(w)
-                    elif self.seq3.char_at(w) == self.seq2.char_at(j):
+                        aligned3 += self.seq3.char_at(k)
+                        i += 1
+                        k += 1
+                    elif self.seq3.char_at(k) == self.seq2.char_at(j):
                         aligned1 += "-"
                         aligned2 += self.seq2.char_at(j)
-                        aligned3 += self.seq3.char_at(w)
+                        aligned3 += self.seq3.char_at(k)
+                        j += 1
+                        k += 1
                     elif self.seq1.char_at(i) == self.seq2.char_at(j):
                         aligned1 += self.seq1.char_at(i)
                         aligned2 += self.seq2.char_at(j)
                         aligned3 += "-"
+                        i += 1
+                        j += 1
                     else:
                         aligned1 += "-"
                         aligned2 += "-"
-                        aligned3 += self.seq3.char_at(w)
+                        aligned3 += self.seq3.char_at(k)
+                        k += 1
             aligned1 += self.seq1.seq[i:] # Adiciona o restante da sequência seq1
             aligned2 += self.seq2.seq[j:] # Adiciona o restante da sequência seq2
-            aligned3 += self.seq3.seq[w:] # Adiciona o restante da sequência seq3
+            aligned3 += self.seq3.seq[k:] # Adiciona o restante da sequência seq3
             
             alignment_lenght = max(len(aligned1), len(aligned2), len(aligned3))
             if len(aligned1) < alignment_lenght:
