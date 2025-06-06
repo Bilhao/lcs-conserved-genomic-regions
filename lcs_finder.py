@@ -336,124 +336,60 @@ class LCSFinder():
                 aligned2 += "-" * (len(aligned1) - len(aligned2))
 
         else: 
-            while l < len(lcs):
-                while i < n and self.seq1.char_at(i) != lcs[l]:
-                    if self.seq1.char_at(i) == self.seq2.char_at(j):
-                        aligned1 += self.seq1.char_at(i)
-                        aligned2 += self.seq2.char_at(j)
-                        aligned3 += "-"
-                        i += 1
-                        j += 1
-                    elif self.seq1.char_at(i) == self.seq3.char_at(k):
-                        aligned1 += self.seq1.char_at(i)
-                        aligned2 += "-"
-                        aligned3 += self.seq3.char_at(k)
-                        i += 1
-                        k += 1
-                    elif self.seq2.char_at(j) == self.seq3.char_at(k):
-                        aligned1 += "-"
-                        aligned2 += self.seq2.char_at(j)
-                        aligned3 += self.seq3.char_at(k)
-                        j += 1
-                        k += 1
-                    else: 
-                        aligned1 += self.seq1.char_at(i)
-                        aligned2 += "-"
-                        aligned3 += "-"
-                        i += 1
-                while j < m and self.seq2.char_at(j) != lcs[l]:
-                    if self.seq2.char_at(j) == self.seq1.char_at(i):
-                        aligned1 += self.seq1.char_at(i)
-                        aligned2 += self.seq2.char_at(j)
-                        aligned3 += "-"
-                        i += 1
-                        j += 1
-                    elif self.seq2.char_at(j) == self.seq3.char_at(k):
-                        aligned1 += "-"
-                        aligned2 += self.seq2.char_at(j)
-                        aligned3 += self.seq3.char_at(k)
-                        j += 1
-                        k += 1
-                    elif self.seq1.char_at(i) == self.seq3.char_at(k):
-                        aligned1 += self.seq1.char_at(i)
-                        aligned2 += "-"
-                        aligned3 += self.seq3.char_at(k)
-                        i += 1
-                        k += 1
-                    else:
-                        aligned1 += "-"
-                        aligned2 += self.seq2.char_at(j)
-                        aligned3 += "-"
-                        j += 1
-                while k < w and self.seq3.char_at(k) != lcs[l]:
-                    if self.seq3.char_at(k) == self.seq1.char_at(i):
-                        aligned1 += self.seq1.char_at(i)
-                        aligned2 += "-"
-                        aligned3 += self.seq3.char_at(k)
-                        i += 1
-                        k += 1
-                    elif self.seq3.char_at(k) == self.seq2.char_at(j):
-                        aligned1 += "-"
-                        aligned2 += self.seq2.char_at(j)
-                        aligned3 += self.seq3.char_at(k)
-                        j += 1
-                        k += 1
-                    elif self.seq1.char_at(i) == self.seq2.char_at(j):
-                        aligned1 += self.seq1.char_at(i)
-                        aligned2 += self.seq2.char_at(j)
-                        aligned3 += "-"
-                        i += 1
-                        j += 1
-                    else:
-                        aligned1 += "-"
-                        aligned2 += "-"
-                        aligned3 += self.seq3.char_at(k)
-                        k += 1
-                aligned1 += self.seq1.char_at(i)
-                aligned2 += self.seq2.char_at(j)
-                aligned3 += self.seq3.char_at(k)
-                i += 1
-                j += 1
-                k += 1
-                l += 1
+            # 2. Lógica: Índices dos caracteres da LCS ("ATTG") em cada sequência.
+            # Esta é a informação central que guia o alinhamento.
+            indices1 = [0, 1, 4, 5]  # Índices de 'A', 'T', 'T', 'G' em s1
+            indices2 = [0, 1, 4, 6]  # Índices de 'A', 'T', 'T', 'G' em s2
+            indices3 = [0, 2, 3, 6]  # Índices de 'A', 'T', 'T', 'G' em s3
+
+            alinhada1, alinhada2, alinhada3 = "", "", ""
+            p1, p2, p3 = 0, 0, 0
+
+            # 3. Processo de alinhamento
+            # Itera sobre cada caractere da LCS para criar os blocos de alinhamento
+            for i in range(len(lcs)):
+                lcs_char = lcs[i]
+
+                # Pega a posição do próximo caractere da LCS em cada sequência
+                prox_p1 = indices1[i]
+                prox_p2 = indices2[i]
+                prox_p3 = indices3[i]
+
+                # Extrai os "segmentos" entre o caractere da LCS anterior e o atual
+                seg1 = self.seq1.seq[p1:prox_p1]
+                seg2 = self.seq2.seq[p2:prox_p2]
+                seg3 = self.seq3.seq[p3:prox_p3]
+
+                # Determina o comprimento máximo entre os segmentos para inserir os gaps
+                max_len = max(len(seg1), len(seg2), len(seg3))
+
+                # Adiciona os segmentos às sequências alinhadas, preenchendo com '-'
+                alinhada1 += seg1.ljust(max_len, '-')
+                alinhada2 += seg2.ljust(max_len, '-')
+                alinhada3 += seg3.ljust(max_len, '-')
+
+                # Adiciona o caractere da LCS, que agora está alinhado
+                alinhada1 += lcs_char
+                alinhada2 += lcs_char
+                alinhada3 += lcs_char
+
+                # Atualiza os ponteiros para a posição logo após o caractere da LCS
+                p1 = prox_p1 + 1
+                p2 = prox_p2 + 1
+                p3 = prox_p3 + 1
+
+            # Adiciona os caracteres restantes (a "cauda") de cada sequência
+            cauda1 = self.seq1.seq[p1:]
+            cauda2 = self.seq2.seq[p2:]
+            cauda3 = self.seq3.seq[p3:]
+
+            # Preenche a cauda para que todas as sequências terminem com o mesmo comprimento
+            max_cauda_len = max(len(cauda1), len(cauda2), len(cauda3))
+            alinhada1 += cauda1.ljust(max_cauda_len, '-')
+            alinhada2 += cauda2.ljust(max_cauda_len, '-')
+            alinhada3 += cauda3.ljust(max_cauda_len, '-')
             
-            aligned1 += self.seq1.seq[i:] # Adiciona o restante da sequência seq1
-            aligned2 += self.seq2.seq[j:] # Adiciona o restante da sequência seq2
-            aligned3 += self.seq3.seq[k:] # Adiciona o restante da sequência seq3
-            
-            # Preenche com traços se necessário
-            alignment_lenght = max(len(aligned1), len(aligned2), len(aligned3))
-            while i < n and j < m and k < w:
-                if len(aligned1) < alignment_lenght:
-                    if self.seq1.char_at(i) != self.seq2.char_at(j) and self.seq2.char_at(j) == self.seq3.char_at(k):
-                        aligned1 = aligned1[:i] + "-" + aligned1[i:]
-                        j += 1
-                        k += 1
-                    elif self.seq1.char_at(i) != self.seq2.char_at(j) and self.seq1.char_at(i) == self.seq3.char_at(k):
-                        aligned1 = aligned1[:i+1] + "-" + aligned1[i+1:]
-                        j += 1
-                        k += 1
-                if len(aligned2) < alignment_lenght:
-                    if self.seq2.char_at(j) != self.seq1.char_at(i) and self.seq1.char_at(i) == self.seq3.char_at(k):
-                        aligned2 = aligned2[:j] + "-" + aligned2[j:]
-                        i += 1
-                        w += 1
-                    elif self.seq2.char_at(j) != self.seq1.char_at(i) and self.seq2.char_at(j) == self.seq3.char_at(k):
-                        aligned2 = aligned2[:j+1] + "-" + aligned2[j+1:]
-                        i += 1
-                        w += 1
-                if len(aligned3) < alignment_lenght:
-                    if self.seq3.char_at(k) != self.seq1.char_at(i) and self.seq1.char_at(i) == self.seq2.char_at(j):
-                        aligned3 = aligned3[:k] + "-" + aligned3[k:]
-                        i += 1
-                        j += 1
-                    elif self.seq3.char_at(k) != self.seq1.char_at(i) and self.seq3.char_at(k) == self.seq2.char_at(j):
-                        aligned3 = aligned3[:k+1] + "-" + aligned3[k+1:]
-                        i += 1
-                        j += 1
-                else:
-                    break
                 
-        return aligned1, aligned2, aligned3
+        return alinhada1, alinhada2, alinhada3
 
     
