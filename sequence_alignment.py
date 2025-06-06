@@ -33,7 +33,6 @@ class SequenceAlignment():
             float: A identidade do alinhamento em porcentagem.
         """
         identity = (self.score / self.alignment_length) * 100
-
         return identity
     
     def _identical_positions(self) -> list[int]:
@@ -58,8 +57,8 @@ class SequenceAlignment():
         return "\n" \
         f"> Sequência 1: {" ".join(self.aligned_seq1)}\n" \
         f"> Sequência 2: {" ".join(self.aligned_seq2)}\n" \
-        f"> Sequência 3: {" ".join(self.aligned_seq3) + "\n" if self.seq3 else ''}" \
-        f"\n" \
+        f"{f'> Sequência 3: {" ".join(self.aligned_seq3)}\n' if self.seq3 else ''}\n" \
+        f"" \
         f"> Comprimento do alinhamento = {self.alignment_length}\n" \
         f"> Posições idênticas nas sequências (✓): {', '.join(map(str, self._identical_positions()))} → total = {self.score}\n" \
         f"> Identity = ({self.score} ÷ {self.alignment_length}) × 100 ≈ {self.identity():.2f}%\n"
