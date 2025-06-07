@@ -65,8 +65,6 @@ class LCSFinder():
         """
         matrix = self._dynamic_matrix_initialization()
         matrix = self._dynamic_matrix_filled(matrix)
-        lcs = self._lcs_reconstruction(matrix)  # Obtém o comprimento do LCS
-        aligned1, aligned2, aligned3 = self._sequence_alignment(lcs)
         
         np_matrix = np.array(matrix)  # Converte a matriz para um array NumPy
 
@@ -145,23 +143,6 @@ class LCSFinder():
                         arrowcolor="red",
                     )
                     j -= 1
-
-            alignment_text = (
-                f"Aligned Sequence 1: {aligned1}<br>"
-                f"Aligned Sequence 2: {aligned2}<br>"
-                f"Conserved subsequence: {lcs}<br>"
-                f"LCS Length: {len(lcs)}<br>"
-            )
-            # Adiciona a anotação do lado direito do gráfico, alinhamento dinâmico
-            fig.add_annotation(
-                text=alignment_text,
-                xref="paper", yref="paper",
-                x=0.5, y=-1.1,
-                showarrow=False,
-                font=dict(size=13),
-                xanchor="auto",
-                yanchor="middle",
-            )
             fig.show(renderer="browser")  # Exibe o gráfico no navegador
         else:
             ...
@@ -178,43 +159,10 @@ class LCSFinder():
         k = self.seq3.length() if self.seq3 else 0
 
         # 1. Inicialização da matriz dinâmica (todos os valores iguais a 0 e tamanho (n+1) x (m+1):
-        # Imperativa:
-        if self.seq3 is None:
-            r1 = []
-            i = 0
-            while i < n + 1:
-                r2 = []
-                j = 0
-                while j < m + 1:
-                    r2.append(0) 
-                    j += 1
-                r1.append(r2)
-                i += 1
-            return r1
-        else:
-            r1 = []
-            i = 0
-            while i < n + 1:
-                r2 = []
-                j = 0
-                while j < m + 1:
-                    r3 = []
-                    w = 0
-                    while w < k + 1:
-                        r3.append(0)
-                        w += 1
-                    r2.append(r3) 
-                    j += 1
-                r1.append(r2)
-                i += 1
-            return r1
-        # Funcional:
-        """
         if self.seq3 is None:
             return [[0 for _ in range(m+1)] for _ in range(n+1)]
         else:
             return [[[0 for _ in range(k+1)] for _ in range(m+1)] for _ in range(n+1)]
-        """
 
     def _dynamic_matrix_filled(self, matrix: list[list[int]] | list[list[list[int]]]) -> list[list[int]] | list[list[list[int]]]:
         """

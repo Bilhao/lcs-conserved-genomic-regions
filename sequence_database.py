@@ -6,28 +6,33 @@ class SequenceDatabase():
     Esta classe permite adicionar sequências, buscar sequências por ID e carregar sequências de um arquivo FASTA.
     """
     def __init__(self):
-        self.database = []
+        self.database = {}
 
     def add_sequence(self, sequence: Sequence):
         """
-        Adiciona uma sequência ao banco de dados.
+        Adiciona uma sequência ao banco de dados. 
+        A sequência só será adicionada se tiver um ID, descrição e sequência válidos, e se o ID não estiver já presente no banco de dados.
         
         Parameters:
             sequence (Sequence): A sequência a ser adicionada.
         """
-        ...
-    
-    def get_sequence_by_id(self, id: str) -> Sequence:
+        if sequence.id and sequence.description and sequence.seq and sequence.id not in self.database:
+            self.database[sequence.id] = sequence
+
+    def get_sequence_by_id(self, id: str) -> Sequence | None:
         """
-        Busca uma sequência pelo seu ID.
+        Busca uma sequência no banco de dados pelo ID fornecido.
         
         Parameters:
             id (str): O ID da sequência a ser buscada.
         
         Returns:
-            Sequence: A sequência correspondente ao ID fornecido.
+            Sequence|None: A sequência correspondente ao ID, ou None se não for encontrada.
         """
-        ...
+        if id in self.database:
+            return self.database[id]
+        else:
+            return None
 
     def load_from_fasta(self, filename: str):
         """
