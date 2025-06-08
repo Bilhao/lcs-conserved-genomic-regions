@@ -41,22 +41,18 @@ class SequenceDatabase():
         Parameters:
             filename (str): O caminho do arquivo FASTA a ser carregado.
         """
-        sequences = {}
         with open(filename, 'r') as file:
-            seq_name = ''
+            id = ''
             seq = ''
             for line in file:
-                line = line.strip()
+                line = line.strip()  # Remove espaços em branco no início e no final
                 if line.startswith('>'):
-                    if seq_name:
-                        sequences[seq_name] = seq
-                    seq_name = line[1:]
+                    if id:
+                        self.database[id] = Sequence(id, "No description", seq)
+                    id = line[1:]
                     seq = ''
                 else:
                     seq += line
-            if seq_name:
-                sequences[seq_name] = seq
-    
-        return sequences
-   
+            if id:
+                self.database[id] = Sequence(id, "No description", seq)  
         

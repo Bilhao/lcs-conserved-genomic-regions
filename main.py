@@ -6,10 +6,10 @@ from lcs_finder import LCSFinder
 from lcs_finder_n_sequences import LCSFinderNSequences
 
 def main():
-    sequences = []
+    sequence_db = SequenceDatabase()
     while True:
         os.system('cls' if os.name == 'nt' else 'clear')  # Limpa a tela do terminal
-        if not sequences:
+        if not sequence_db.database.values():
             print("Identificação e Análise de Regiões Genéticas Conservadas usando Subsequências Comuns Mais Longas\n")
             print("=" * 100, "\n")
             print("Selecione uma das opções abaixo:\n")
@@ -18,7 +18,7 @@ def main():
             print("> 3. Sair do programa")
         else:
             print("Sequencias adicionadas:\n")
-            [print(seq) for seq in sequences]
+            [print(seq) for seq in sequence_db.database.values()]
             print("=" * 100, "\n")
             print("Selecione uma das opções abaixo:\n")
             print("> 1. Adicionar sequencia para análise")
@@ -35,68 +35,64 @@ def main():
             description = input("Digite a descrição da sequência: ")
             sequence = input("Digite a sequência: ")
             seq1 = Sequence(seq_id, description, sequence.upper())
-            sequences.append(seq1)
+            sequence_db.add_sequence(seq1)
             continue
         elif option == "2":
             print("")
-            filename = input("Digite o caminho do arquivo FASTA: ")
-            if not os.path.isfile(filename):
+            #filename = input("Digite o caminho do arquivo FASTA: ")
+            if not os.path.isfile(r"Projeto\lcs-conserved-genomic-regions\fasta_file.fasta"):
                 print("Arquivo não encontrado. Por favor, verifique o caminho e tente novamente.")
                 input("Pressione Enter para continuar...")
                 continue
             try:
-                sequence_db = SequenceDatabase()
-                sequences_from_file = sequence_db.load_from_fasta(filename)
-                for seq_id, seq in sequences_from_file.items():
-                    seq_obj = Sequence(seq_id, "", seq.upper())
-                    sequences.append(seq_obj)
-                print(f"{len(sequences_from_file)} sequências carregadas com sucesso do arquivo {filename}.")
+                sequence_db.load_from_fasta(r"Projeto\lcs-conserved-genomic-regions\fasta_file.fasta")
+                print(f"{len(sequence_db.database.items())} sequências carregadas com sucesso do arquivo {r"Projeto\lcs-conserved-genomic-regions\fasta_file.fasta"}.")
                 input("Pressione Enter para continuar...")
             except (FileNotFoundError, ValueError) as e:
                 print(f"Erro ao carregar o arquivo: {e}")
                 input("Pressione Enter para continuar...")
                 continue
-        elif option == "3" and len(sequences) > 0:
+        elif option == "3" and len(sequence_db.database.values()) > 0:
             print("")
-            if len(sequences) < 2:
+            if len(sequence_db.database.values()) < 2:
                 print("Por favor, adicione pelo menos duas sequências para calcular o LCS.")
                 input("Pressione Enter para continuar...")
                 continue
-            if len(sequences) == 2:  
-                seq1 = sequences[0]
-                seq2 = sequences[1]
+            if len(sequence_db.database.values()) == 2:  
+                seq1 = list(sequence_db.database.values())[0]
+                seq2 = list(sequence_db.database.values())[1]
                 lcs_finder = LCSFinder(seq1, seq2)
                 print(f"Tamanho do LCS entre as sequências: {lcs_finder.get_lcs_length()}")
                 print(f"LCS entre as sequências: {lcs_finder.get_lcs()}")
-            elif len(sequences) == 3:
-                seq1 = sequences[0]
-                seq2 = sequences[1]
-                seq3 = sequences[2]
+            elif len(sequence_db.database.values()) == 3:
+                seq1 = list(sequence_db.database.values())[0]
+                seq2 = list(sequence_db.database.values())[1]
+                seq3 = list(sequence_db.database.values())[2]
                 lcs_finder = LCSFinder(seq1, seq2, seq3)
                 print(f"Tamanho do LCS entre as sequências: {lcs_finder.get_lcs_length()}")
                 print(f"LCS entre as sequências: {lcs_finder.get_lcs()}")
             else:
-                lcs_finder = LCSFinderNSequences(sequences)
+                lcs_finder = LCSFinderNSequences(sequence_db.database.values())
                 print(f"Tamanho da LCS entre as sequências: {lcs_finder.get_lcs_length()}")
                 print(f"LCS entre as sequências: {lcs_finder.get_lcs()}\n")
             input("Pressione Enter para continuar...")
-        elif option == "4" and len(sequences) > 0:
+        elif option == "4" and len(sequence_db.database.values()) > 0:
             print("")
-            if len(sequences) < 2:
+            if len(sequence_db.database.values()) < 2:
                 print("Por favor, adicione pelo menos duas sequências para exibir os detalhes do alinhamento.")
                 input("Pressione Enter para continuar...")
                 continue
-            if len(sequences) == 2:  
-                seq1 = sequences[0]
-                seq2 = sequences[1]
+            if len(sequence_db.database.values()) == 2:  
+                seq1 = list(sequence_db.database.values())[0]
+                seq2 = list(sequence_db.database.values())[1]
                 lcs_finder = LCSFinder(seq1, seq2)
                 alignment = lcs_finder.compute_lcs()
                 print("Detalhes do Alinhamento:")
                 print(alignment)
-            elif len(sequences) == 3:
-                seq1 = sequences[0]
-                seq2 = sequences[1]
-                seq3 = sequences[2]
+            elif len(sequence_db.database.values()) == 3:
+                seq1 = list(sequence_db.database.values())[0]
+                seq2 = list(sequence_db.database.values())[1]
+                seq3 = list(sequence_db.database.values())[2]
                 lcs_finder = LCSFinder(seq1, seq2, seq3)
                 alignment = lcs_finder.compute_lcs()
                 print("Detalhes do Alinhamento:")
@@ -106,21 +102,21 @@ def main():
                 input("Pressione Enter para continuar...")
                 continue
             input("Pressione Enter para continuar...")
-        elif option == "5" and len(sequences) > 0:
+        elif option == "5" and len(sequence_db.database.values()) > 0:
             print("")
-            if len(sequences) < 2:
+            if len(sequence_db.database.values()) < 2:
                 print("Por favor, adicione pelo menos duas sequências para visualizar o LCS e o alinhamento.")
                 input("Pressione Enter para continuar...")
                 continue
-            if len(sequences) == 2:  
-                seq1 = sequences[0]
-                seq2 = sequences[1]
+            if len(sequence_db.database.values()) == 2:  
+                seq1 = list(sequence_db.database.values())[0]
+                seq2 = list(sequence_db.database.values())[1]
                 lcs_finder = LCSFinder(seq1, seq2)
                 lcs_finder.visualize()
-            elif len(sequences) == 3:
-                seq1 = sequences[0]
-                seq2 = sequences[1]
-                seq3 = sequences[2]
+            elif len(sequence_db.database.values()) == 3:
+                seq1 = list(sequence_db.database.values())[0]
+                seq2 = list(sequence_db.database.values())[1]
+                seq3 = list(sequence_db.database.values())[2]
                 lcs_finder = LCSFinder(seq1, seq2, seq3)
                 lcs_finder.visualize()
             else:
@@ -128,23 +124,23 @@ def main():
                 input("Pressione Enter para continuar...")
                 continue
             input("Pressione Enter para continuar...")
-        elif option == "6" and len(sequences) > 0:
+        elif option == "6" and len(sequence_db.database.values()) > 0:
             print("")
             print("Selecione a sequência a ser removida:")
-            for i, seq in enumerate(sequences, start=1):
+            """for i, seq in enumerate(sequence_db.database.values(), start=1):
                 print(f"{i}. {seq.id} - {seq.description}")
-            print(f"{len(sequences) + 1}. Cancelar")
+            print(f"{len(sequence_db.database.values()) + 1}. Cancelar")
             choice = input(": ")
-            if choice.isdigit() and 1 <= int(choice) <= len(sequences):
+            if choice.isdigit() and 1 <= int(choice) <= len(sequence_db.database.values()):
                 removed_seq = sequences.pop(int(choice) - 1)
                 print(f"Sequência {removed_seq.id} removida.")
             elif choice == str(len(sequences) + 1):
                 print("Operação cancelada.")
             else:
                 print("Opção inválida. Nenhuma sequência foi removida.")
-            input("Pressione Enter para continuar...")
+            input("Pressione Enter para continuar...")"""
 
-        elif option == "7" or option == "3" and len(sequences) == 0:
+        elif option == "7" or option == "3" and len(sequence_db.database.values()) == 0:
             print("")
             print("Saindo do programa...")
             break
