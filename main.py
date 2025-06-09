@@ -39,13 +39,13 @@ def main():
             continue
         elif option == "2":
             print("")
-            #filename = input("Digite o caminho do arquivo FASTA: ")
-            if not os.path.isfile(r"Projeto\lcs-conserved-genomic-regions\fasta_file.fasta"):
+            filename = input("Digite o caminho do arquivo FASTA: ")
+            if not os.path.isfile(fr"{filename}"):
                 print("Arquivo não encontrado. Por favor, verifique o caminho e tente novamente.")
                 input("Pressione Enter para continuar...")
                 continue
             try:
-                sequence_db.load_from_fasta(r"Projeto\lcs-conserved-genomic-regions\fasta_file.fasta")
+                sequence_db.load_from_fasta(fr"{filename}")
                 print(f"{len(sequence_db.database.items())} sequências carregadas com sucesso do arquivo {r"Projeto\lcs-conserved-genomic-regions\fasta_file.fasta"}.")
                 input("Pressione Enter para continuar...")
             except (FileNotFoundError, ValueError) as e:
