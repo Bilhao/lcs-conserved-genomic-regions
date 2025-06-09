@@ -125,5 +125,5 @@ class Visualize:
         )
 
         fig_dna.update_traces(textfont_size=12, selector=dict(type='heatmap'), row=1, col=1)
-
-        fig_dna.show(renderer="browser")
+        fig_dna.write_image("alignment_visualization.png", format="png", scale=1)
+        #fig_dna.show()
