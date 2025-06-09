@@ -19,6 +19,16 @@ class SequenceDatabase():
         if sequence.id and sequence.description and sequence.seq and sequence.id not in self.database:
             self.database[sequence.id] = sequence
 
+    def remove_sequence(self, id: str):
+        """
+        Remove uma sequência do banco de dados pelo ID fornecido.
+        
+        Parameters:
+            id (str): O ID da sequência a ser removida.
+        """
+        if id in self.database:
+            del self.database[id]
+
     def get_sequence_by_id(self, id: str) -> Sequence | None:
         """
         Busca uma sequência no banco de dados pelo ID fornecido.
@@ -41,22 +51,22 @@ class SequenceDatabase():
         Parameters:
             filename (str): O caminho do arquivo FASTA a ser carregado.
         """
-        sequences = {}
         with open(filename, 'r') as file:
-            seq_name = ''
+            id = ''
+            description = ''
             seq = ''
             for line in file:
-                line = line.strip()
+                line = line.strip()  # Remove espaços em branco no início e no final
                 if line.startswith('>'):
-                    if seq_name:
-                        sequences[seq_name] = seq
-                    seq_name = line[1:]
+                    if id:  # Salva a sequência anterior, se existir
+                        self.database[id] = Sequence(id, description or "No description", seq)
+                    # Divide a linha '>' em ID e descrição
+                    header = line[1:].split(' ', 1)  # Divide na primeira ocorrência de espaço
+                    id = header[0]  # Primeiro elemento é o ID
+                    description = header[1] if len(header) > 1 else "No description"  # Descrição ou padrão
                     seq = ''
                 else:
                     seq += line
-            if seq_name:
-                sequences[seq_name] = seq
-    
-        return sequences
-   
+            if id:  # Salva a última sequência
+                self.database[id] = Sequence(id, description or "No description", seq)
         
