@@ -64,7 +64,7 @@ class Visualize:
             y=ids,  # IDs das sequências (eixo y).
             text=text_sequences,  # Texto a ser exibido em cada célula (nucleotídeos).
             texttemplate="%{text}",  # Formato para exibir o texto.
-            colorscale="Turbo",  # Escala de cores definida anteriormente.
+            colorscale="Portland",  # Escala de cores definida anteriormente.
             showscale=False,  # Oculta a barra de escala de cores.
             xgap=1,  # Espaçamento entre células no eixo x.
             ygap=1,  # Espaçamento entre células no eixo y.
