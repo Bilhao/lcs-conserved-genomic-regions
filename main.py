@@ -72,7 +72,7 @@ def main():
                 print(f"Tamanho do LCS entre as sequências: {lcs_finder.get_lcs_length()}")
                 print(f"LCS entre as sequências: {lcs_finder.get_lcs()}")
             else:
-                lcs_finder = LCSFinderNSequences(sequence_db.database.values())
+                lcs_finder = LCSFinderNSequences(list(sequence_db.database.values()))
                 print(f"Tamanho da LCS entre as sequências: {lcs_finder.get_lcs_length()}")
                 print(f"LCS entre as sequências: {lcs_finder.get_lcs()}\n")
             input("Pressione Enter para continuar...")
