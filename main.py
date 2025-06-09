@@ -39,13 +39,13 @@ def main():
             continue
         elif option == "2":
             print("")
-            filename = input("Digite o caminho do arquivo FASTA: ")
-            if not os.path.isfile(fr"{filename}"):
+            #filename = input("Digite o caminho do arquivo FASTA: ")
+            if not os.path.isfile(r"Projeto\lcs-conserved-genomic-regions\fasta_file.fasta"):
                 print("Arquivo não encontrado. Por favor, verifique o caminho e tente novamente.")
                 input("Pressione Enter para continuar...")
                 continue
             try:
-                sequence_db.load_from_fasta(fr"{filename}")
+                sequence_db.load_from_fasta(r"Projeto\lcs-conserved-genomic-regions\fasta_file.fasta")
                 print(f"{len(sequence_db.database.items())} sequências carregadas com sucesso do arquivo {r"Projeto\lcs-conserved-genomic-regions\fasta_file.fasta"}.")
                 input("Pressione Enter para continuar...")
             except (FileNotFoundError, ValueError) as e:
@@ -58,13 +58,20 @@ def main():
                 print("Por favor, adicione pelo menos duas sequências para calcular o LCS.")
                 input("Pressione Enter para continuar...")
                 continue
-            if len(sequence_db.database.values()) == 2:  
+            elif len(sequence_db.database.values()) == 2:  
                 seq1 = list(sequence_db.database.values())[0]
                 seq2 = list(sequence_db.database.values())[1]
                 lcs_finder = LCSFinder(seq1, seq2)
                 print(f"Tamanho do LCS entre as sequências: {lcs_finder.get_lcs_length()}")
                 print(f"LCS entre as sequências: {lcs_finder.get_lcs()}")
-            elif len(sequence_db.database.values()) == 3:
+            else:
+                print("Escolha as sequências para calcular o LCS:")
+                for i, sequence in enumerate(list(sequence_db.database.values())):
+                    print(f"{i + 1}. {sequence.id}")
+                input(": ")
+                    
+           
+            """elif len(sequence_db.database.values()) == 3:
                 seq1 = list(sequence_db.database.values())[0]
                 seq2 = list(sequence_db.database.values())[1]
                 seq3 = list(sequence_db.database.values())[2]
@@ -72,10 +79,10 @@ def main():
                 print(f"Tamanho do LCS entre as sequências: {lcs_finder.get_lcs_length()}")
                 print(f"LCS entre as sequências: {lcs_finder.get_lcs()}")
             else:
-                lcs_finder = LCSFinderNSequences(list(sequence_db.database.values()))
+                lcs_finder = LCSFinderNSequences(sequence_db.database.values())
                 print(f"Tamanho da LCS entre as sequências: {lcs_finder.get_lcs_length()}")
                 print(f"LCS entre as sequências: {lcs_finder.get_lcs()}\n")
-            input("Pressione Enter para continuar...")
+            input("Pressione Enter para continuar...")"""
         elif option == "4" and len(sequence_db.database.values()) > 0:
             print("")
             if len(sequence_db.database.values()) < 2:
