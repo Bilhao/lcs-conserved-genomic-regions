@@ -19,6 +19,16 @@ class SequenceDatabase():
         if sequence.id and sequence.description and sequence.seq and sequence.id not in self.database:
             self.database[sequence.id] = sequence
 
+    def remove_sequence(self, id: str):
+        """
+        Remove uma sequência do banco de dados pelo ID fornecido.
+        
+        Parameters:
+            id (str): O ID da sequência a ser removida.
+        """
+        if id in self.database:
+            del self.database[id]
+
     def get_sequence_by_id(self, id: str) -> Sequence | None:
         """
         Busca uma sequência no banco de dados pelo ID fornecido.
