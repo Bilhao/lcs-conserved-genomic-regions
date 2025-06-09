@@ -4,6 +4,7 @@ from sequence_alignment import SequenceAlignment
 from sequence_database import SequenceDatabase
 from lcs_finder import LCSFinder
 from lcs_finder_n_sequences import LCSFinderNSequences
+from visualize import Visualize
 
 def main():
     sequence_db = SequenceDatabase()
@@ -109,16 +110,11 @@ def main():
                 input("Pressione Enter para continuar...")
                 continue
             if len(sequence_db.database.values()) == 2:  
-                seq1 = list(sequence_db.database.values())[0]
-                seq2 = list(sequence_db.database.values())[1]
-                lcs_finder = LCSFinder(seq1, seq2)
-                lcs_finder.visualize()
+                view = Visualize(sequence_db)
+                view.visualize_sequences()
             elif len(sequence_db.database.values()) == 3:
-                seq1 = list(sequence_db.database.values())[0]
-                seq2 = list(sequence_db.database.values())[1]
-                seq3 = list(sequence_db.database.values())[2]
-                lcs_finder = LCSFinder(seq1, seq2, seq3)
-                lcs_finder.visualize()
+                view = Visualize(sequence_db)
+                view.visualize_sequences()
             else:
                 print("Para mais de 3 sequências, a visualização do LCS não está implementada.")
                 input("Pressione Enter para continuar...")
@@ -126,7 +122,7 @@ def main():
             input("Pressione Enter para continuar...")
         elif option == "6" and len(sequence_db.database.values()) > 0:
             print("")
-            print("Selecione a sequência a ser removida:")
+            print("Selecione a sequênci654a a ser removida:")
             """for i, seq in enumerate(sequence_db.database.values(), start=1):
                 print(f"{i}. {seq.id} - {seq.description}")
             print(f"{len(sequence_db.database.values()) + 1}. Cancelar")

@@ -1,7 +1,5 @@
 from sequence import Sequence
 from sequence_alignment import SequenceAlignment
-import plotly.express as px
-import numpy as np
 
 
 class LCSFinder():
@@ -22,7 +20,7 @@ class LCSFinder():
         self.matrix = self._dynamic_matrix_initialization()  # Inicializa a matriz dinâmica ou tensor
         self.matrix = self._dynamic_matrix_filled(self.matrix)  # Preenche a matriz dinâmica ou tensor
     
-    def compute_lcs(self) -> SequenceAlignment:
+    def compute_lcs(self)   -> SequenceAlignment:
         """
         Computa o alinhamento de duas ou três sequências, retornando um objeto SequenceAlignment.
 
@@ -56,92 +54,6 @@ class LCSFinder():
         """
         lcs = self._lcs_reconstruction(self.matrix)  # Reconstrói a subsequência comum mais longa (LCS) usando a matriz dinâmica ou tensor preenchido
         return lcs  # Retorna a LCS reconstruída a partir da matriz dinâmica ou tensor preenchido
-
-    def visualize(self):
-        """
-        Visualiza o LCS e o alinhamento das sequências usando Plotly.
-        Esta função cria um gráfico interativo que mostra a matriz de LCS e as setas indicando o alinhamento das sequências.
-        """
-        np_matrix = np.array(self.matrix)  # Converte a matriz para um array NumPy
-
-        if self.seq3 is None:
-            fig = px.imshow(
-                np_matrix.T,  # Transposta para alinhar corretamente as sequências
-                title='LCS - 2 Sequences',
-                labels=dict(x="Sequence 1", y="Sequence 2", color="LCS Value"),
-                text_auto=True,
-            )
-            fig.update_layout(
-                xaxis=dict(tickmode='array', tickvals=list(range(self.seq1.length() + 1)), ticktext=['0'] + list(self.seq1.seq)),
-                yaxis=dict(tickmode='array', tickvals=list(range(self.seq2.length() + 1)), ticktext=['0'] + list(self.seq2.seq)),
-            )
-            fig.update_xaxes(side="top")
-            fig.update_yaxes(autorange="reversed")
-
-            i, j = self.seq1.length(), self.seq2.length()
-            while i > 0 and j > 0:
-                if self.seq1.char_at(i-1) == self.seq2.char_at(j-1):
-                    fig.add_shape(
-                        type="rect",
-                        x0=i - 0.5, x1=i + 0.5,
-                        y0=j - 0.5, y1=j + 0.5,
-                        line=dict(color="black", width=2),
-                        layer="above"
-                    )
-                    fig.add_annotation(
-                        x=i,
-                        y=j,
-                        ax=i - 1,
-                        ay=j - 1,
-                        xref="x",
-                        yref="y",
-                        axref="x",
-                        ayref="y",
-                        showarrow=True,
-                        arrowwidth=2,
-                        arrowhead=5,
-                        arrowside="start",
-                        arrowcolor="red",
-                    )
-                    i -= 1
-                    j -= 1
-                elif self.matrix[i-1][j] >= self.matrix[i][j-1]:
-                    fig.add_annotation(
-                        x=i,
-                        y=j,
-                        ax=i - 1,
-                        ay=j,
-                        xref="x",
-                        yref="y",
-                        axref="x",
-                        ayref="y",
-                        showarrow=True,
-                        arrowwidth=2,
-                        arrowhead=5,
-                        arrowside="start",
-                        arrowcolor="red",
-                    )
-                    i -= 1
-                else:
-                    fig.add_annotation(
-                        x=i,
-                        y=j,
-                        ax=i,
-                        ay=j - 1,
-                        xref="x",
-                        yref="y",
-                        axref="x",
-                        ayref="y",
-                        showarrow=True,
-                        arrowwidth=2,
-                        arrowhead=5,
-                        arrowside="start",
-                        arrowcolor="red",
-                    )
-                    j -= 1
-            fig.show(renderer="browser")  # Exibe o gráfico no navegador
-        else:
-            ...
 
     def _dynamic_matrix_initialization(self) -> list[list[int]] | list[list[list[int]]]:
         """
@@ -280,8 +192,11 @@ class LCSFinder():
                 aligned2 += "-" * (len(aligned1) - len(aligned2))
 
         else: 
+            # Alinhamento para três sequências usando a LCS reconstruída
             while l < len(lcs):
+                # Avança nas três sequências até encontrar o próximo caractere da LCS em cada uma
                 while i < n and self.seq1.char_at(i) != lcs[l]:
+                    # Casos onde dois caracteres coincidem, mas não são o da LCS
                     if self.seq1.char_at(i) == self.seq2.char_at(j) != lcs[l]:
                         aligned1 += self.seq1.char_at(i)
                         aligned2 += self.seq2.char_at(j)
@@ -301,11 +216,13 @@ class LCSFinder():
                         j += 1
                         k += 1
                     else: 
+                        # Caso nenhum caractere coincida, adiciona apenas o da seq1 e traços
                         aligned1 += self.seq1.char_at(i)
                         aligned2 += "-"
                         aligned3 += "-"
                         i += 1
                 while j < m and self.seq2.char_at(j) != lcs[l]:
+                    # Casos onde dois caracteres coincidem, mas não são o da LCS
                     if self.seq2.char_at(j) == self.seq1.char_at(i) != lcs[l]:
                         aligned1 += self.seq1.char_at(i)
                         aligned2 += self.seq2.char_at(j)
@@ -325,11 +242,13 @@ class LCSFinder():
                         i += 1
                         k += 1
                     else:
+                        # Caso nenhum caractere coincida, adiciona apenas o da seq2 e traços
                         aligned1 += "-"
                         aligned2 += self.seq2.char_at(j)
                         aligned3 += "-"
                         j += 1
                 while k < w and self.seq3.char_at(k) != lcs[l]:
+                    # Casos onde dois caracteres coincidem, mas não são o da LCS
                     if self.seq3.char_at(k) == self.seq1.char_at(i) != lcs[l]:
                         aligned1 += self.seq1.char_at(i)
                         aligned2 += "-"
@@ -349,10 +268,12 @@ class LCSFinder():
                         i += 1
                         j += 1
                     else:
+                        # Caso nenhum caractere coincida, adiciona apenas o da seq3 e traços
                         aligned1 += "-"
                         aligned2 += "-"
                         aligned3 += self.seq3.char_at(k)
                         k += 1
+                # Adiciona o caractere da LCS nas três sequências
                 aligned1 += self.seq1.char_at(i)
                 aligned2 += self.seq2.char_at(j)
                 aligned3 += self.seq3.char_at(k)
@@ -361,10 +282,12 @@ class LCSFinder():
                 k += 1
                 l += 1
 
+            # Adiciona o restante das sequências (caso alguma seja maior)
             aligned1 += self.seq1.seq[i:] # Adiciona o restante da sequência seq1
             aligned2 += self.seq2.seq[j:] # Adiciona o restante da sequência seq2
             aligned3 += self.seq3.seq[k:] # Adiciona o restante da sequência seq3
 
+            # Ajusta o comprimento das sequências alinhadas para que fiquem iguais, preenchendo com traços se necessário
             max_lenght = max(len(aligned1), len(aligned2), len(aligned3))
             min_lenght = min(len(aligned1), len(aligned2), len(aligned3))
 

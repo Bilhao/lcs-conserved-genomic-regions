@@ -43,16 +43,20 @@ class SequenceDatabase():
         """
         with open(filename, 'r') as file:
             id = ''
+            description = ''
             seq = ''
             for line in file:
                 line = line.strip()  # Remove espaços em branco no início e no final
                 if line.startswith('>'):
-                    if id:
-                        self.database[id] = Sequence(id, "No description", seq)
-                    id = line[1:]
+                    if id:  # Salva a sequência anterior, se existir
+                        self.database[id] = Sequence(id, description or "No description", seq)
+                    # Divide a linha '>' em ID e descrição
+                    header = line[1:].split(' ', 1)  # Divide na primeira ocorrência de espaço
+                    id = header[0]  # Primeiro elemento é o ID
+                    description = header[1] if len(header) > 1 else "No description"  # Descrição ou padrão
                     seq = ''
                 else:
                     seq += line
-            if id:
-                self.database[id] = Sequence(id, "No description", seq)  
+            if id:  # Salva a última sequência
+                self.database[id] = Sequence(id, description or "No description", seq)
         
