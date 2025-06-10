@@ -289,8 +289,8 @@ class LCSFinder():
             aligned3 += self.seq3.seq[k:] # Adiciona o restante da sequência seq3
 
             # Ajusta o comprimento das sequências alinhadas para que fiquem iguais, preenchendo com traços se necessário
-            max_lenght = max(len(aligned1), len(aligned2), len(aligned3))
-            min_lenght = min(len(aligned1), len(aligned2), len(aligned3))
+            max_length = max(len(aligned1), len(aligned2), len(aligned3))
+            min_length = min(len(aligned1), len(aligned2), len(aligned3))
 
             while min_length < max_length:
                 # Verifica se aligned1 é mais curta que o comprimento máximo desejado
