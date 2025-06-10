@@ -31,7 +31,7 @@ class Sequence():
         Returns:
             str: O caractere na posição especificada.
         """
-        assert 0 <= position < self.length(), "Posição não existe"
+        assert 0 <= position < self.length(), "Posição não existe"  # Verifica se a posição está entre 0 e o tamanho da string(sequência)
         return self.seq[position]
         
     def __str__(self) -> str:

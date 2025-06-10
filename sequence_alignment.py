@@ -42,11 +42,11 @@ class SequenceAlignment():
         """
         identical_positions = []
         if not self.seq3:
-            for i, (a, b) in enumerate(zip(self.aligned_seq1, self.aligned_seq2), 1):
+            for i, (a, b) in enumerate(zip(self.aligned_seq1, self.aligned_seq2), 1): # Alinha as sequências para retornar os indices onde os caracteres são iguais
                 if a == b:
                     identical_positions.append(i)
         else:
-            for i, (a, b, c) in enumerate(zip(self.aligned_seq1, self.aligned_seq2, self.aligned_seq3), 1):
+            for i, (a, b, c) in enumerate(zip(self.aligned_seq1, self.aligned_seq2, self.aligned_seq3), 1): # Alinha as sequências para retornar os indices onde os caracteres são iguais
                 if a == b == c:
                     identical_positions.append(i)
         return identical_positions
