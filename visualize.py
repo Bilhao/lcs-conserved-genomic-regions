@@ -33,36 +33,25 @@ class Visualize:
         if self.alignment.aligned_seq3:
             aligned_seqs.append(self.alignment.aligned_seq3)
 
-        all_chars = set()
-        for seq_str in aligned_seqs:
-            all_chars.update(list(seq_str))
-
-        sorted_unique_chars = sorted(list(all_chars))
-        char_to_int_idx = {char: i for i, char in enumerate(sorted_unique_chars)}
-
-        # Constrói a matriz 'z' (valores numéricos para o heatmap) e a matriz de texto para exibição.
-        z_sequences_indexed = []  # Armazena os índices dos caracteres para o heatmap.
-        text_sequences = []  # Armazena os caracteres dos nucleotídeos para exibição no heatmap.
-        for seq_str in aligned_seqs:
-            # Converte cada caractere da sequência para seu índice correspondente.
-            row = [char_to_int_idx.get(char, -1) for char in seq_str] # Usar -1 ou algum valor para chars inesperados se necessário
-            z_sequences_indexed.append(row)
-            # Adiciona a sequência original (como lista de caracteres) para o texto do heatmap.
-            text_sequences.append(list(seq_str))
+        map_chars = {
+            "A": 0,
+            "T": 1,
+            "C": 2,
+            "G": 3,
+            "-": 4
+        }  # Mapeia os caracteres de nucleotídeos e o caractere de espaço para valores numéricos (indices).
 
         # Obtém o comprimento do alinhamento (todas as sequências alinhadas têm o mesmo comprimento).
         alignment_length = len(aligned_seqs[0])
-        # Cria uma lista de posições para o eixo x do gráfico.
-        positions_for_plot_dna = list(range(alignment_length))
 
         # Cria a figura do Plotly com um heatmap.
         fig = go.Figure(data=go.Heatmap(
-            z=z_sequences_indexed,  # Dados numéricos para as cores do heatmap.
-            x=positions_for_plot_dna,  # Posições no alinhamento (eixo x).
+            z=[[map_chars[char] for char in aligned_seq] for aligned_seq in aligned_seqs],  # Converte as sequências alinhadas em valores numéricos.
+            x=list(range(alignment_length)),  # Posições no alinhamento (eixo x).
             y=ids,  # IDs das sequências (eixo y).
-            text=text_sequences,  # Texto a ser exibido em cada célula (nucleotídeos).
+            text=[list(aligned_seq) for aligned_seq in aligned_seqs],  # Texto a ser exibido em cada célula.
             texttemplate="%{text}",  # Formato para exibir o texto.
-            colorscale="Portland",  # Escala de cores definida anteriormente.
+            colorscale="Portland",  # Escala de cores.
             showscale=False,  # Oculta a barra de escala de cores.
             xgap=1,  # Espaçamento entre células no eixo x.
             ygap=1,  # Espaçamento entre células no eixo y.
