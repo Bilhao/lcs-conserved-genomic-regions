@@ -4,6 +4,9 @@ from itertools import product
 class LCSFinderNSequences:
     def __init__(self, sequences: list[Sequence]):
         self.sequences = sequences
+
+        self.dd = self._initialization()
+        self.dd = self._filling(self.dd)
     
     def get_lcs_length(self) -> int:
         """
@@ -17,9 +20,7 @@ class LCSFinderNSequences:
         Returns:
             int: Comprimento do LCS para as N sequências.
         """
-        dd = self._initialization()
-        dd = self._filling(dd)
-        return dd[tuple(seq.length() for seq in self.sequences)]
+        return self.dd[tuple(seq.length() for seq in self.sequences)]
     
     def get_lcs(self) -> str:
         """
@@ -30,9 +31,6 @@ class LCSFinderNSequences:
         Returns:
             str: O LCS formado pelas N sequências.
         """
-        dd = self._initialization()
-        dd = self._filling(dd)
-
         # Reconstrução do LCS a partir do dicionário
         indices = [seq.length() for seq in self.sequences]
         lcs_chars = []
@@ -43,7 +41,7 @@ class LCSFinderNSequences:
                 lcs_chars.append(chars[0])
                 indices = [i - 1 for i in indices]
             else:
-                max_index = max(range(len(indices)), key=lambda i: dd[tuple(indices[:i] + [indices[i] - 1] + indices[i + 1:])] if indices[i] > 0 else -1)
+                max_index = max(range(len(indices)), key=lambda i: self.dd[tuple(indices[:i] + [indices[i] - 1] + indices[i + 1:])] if indices[i] > 0 else -1)
                 indices[max_index] -= 1
 
         return ''.join(reversed(lcs_chars))
