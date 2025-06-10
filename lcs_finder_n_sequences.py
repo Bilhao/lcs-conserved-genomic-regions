@@ -5,9 +5,6 @@ class LCSFinderNSequences:
     def __init__(self, sequences: list[Sequence]):
         self.sequences = sequences
     
-    def compute_lcs(self):
-        ...
-    
     def get_lcs_length(self) -> int:
         """
         Calcula o comprimento do LCS (Longest Common Subsequence) para N sequências.
@@ -67,10 +64,15 @@ class LCSFinderNSequences:
         dd = {}
 
         def fill(indices):
-            if len(indices) == n:
-                dd[tuple(indices)] = 0
+            """
+            Função recursiva para preencher o dicionário dinâmico com todas as combinações de índices.
+
+            
+            """
+            if len(indices) == n:  # Se já temos índices para todas as sequências
+                dd[tuple(indices)] = 0  # Inicializa o valor como 0
                 return
-            for i in range(lengths[len(indices)] + 1):
+            for i in range(lengths[len(indices)] + 1):  # 
                 fill(indices + [i])
 
         fill([])
@@ -98,13 +100,12 @@ class LCSFinderNSequences:
         lengths = [seq.length() for seq in self.sequences]
         n = len(self.sequences)
 
-        # Gera todas as combinações possíveis de índices (exceto o estado inicial 0,...,0)
-        for indices in product(*[range(1, l + 1) for l in lengths]):
+        # Gera todas as combinações possíveis de índices (excluindo o índice 0)
+        for indices in product(*[range(1, l + 1) for l in lengths]):  # product gera todas as combinações de índices possíveis. Ex: product((0,1), (0,1), (0,1)) --> (0,0,0) (0,0,1) (0,1,0) (0,1,1) (1,0,0) ...
             # Pega o caractere atual de cada sequência
-            chars = [self.sequences[i].seq[indices[i] - 1] for i in range(n)]
+            chars = [self.sequences[i].seq[indices[i] - 1] for i in range(n)] 
 
-            if all(c == chars[0] for c in chars):
-                # Se todos os caracteres são iguais, soma 1 ao valor do estado anterior (todos índices -1)
+            if all(c == chars[0] for c in chars):  # Se todos os caracteres são iguais, soma 1 ao valor do estado anterior
                 prev_indices = tuple(idx - 1 for idx in indices)
                 dd[indices] = dd[prev_indices] + 1
             else:

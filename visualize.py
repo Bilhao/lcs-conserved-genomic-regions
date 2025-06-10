@@ -4,8 +4,6 @@ from sequence_alignment import SequenceAlignment
 from lcs_finder import LCSFinder
 from lcs_finder_n_sequences import LCSFinderNSequences
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-
 
 class Visualize:
     def __init__(self, sequence_db: SequenceDatabase):
@@ -19,7 +17,7 @@ class Visualize:
                 list(self.sequence_db.database.values())[1],
                 list(self.sequence_db.database.values())[2] if len(self.sequence_db.database.values()) > 2 else None
             )
-        self.alignment = self.lcs_finder.compute_lcs()
+        self.alignment: SequenceAlignment = self.lcs_finder.compute_lcs()
 
 
     def visualize_sequences(self):
