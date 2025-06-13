@@ -61,8 +61,8 @@ class Visualize:
         # Configura o layout da figura.
         fig.update_layout(
             title_text="Visualização ilustrando as subsequências conservadas identificadas",
-            height=max(400, 200 + len(ids) * 30), # Altura dinâmica baseada no número de sequências.
-            margin=dict(l=120, r=50, t=100, b=50), # Margens do gráfico.
+            height=max(400, 200 + len(ids) * 30),
+            margin=dict(l=120, r=50, t=100, b=50),
         )
 
         # Configura os ticks do eixo x.

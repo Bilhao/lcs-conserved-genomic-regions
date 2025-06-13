@@ -17,8 +17,8 @@ class LCSFinder():
         self.seq2 = seq2
         self.seq3 = seq3
         
-        self.dp = self._dynamic_matrix_initialization()  # Inicializa a matriz dinâmica ou tensor
-        self.dp = self._dynamic_matrix_filled(self.dp)  # Preenche a matriz dinâmica ou tensor
+        self.dp = self._initialization()  # Inicializa a matriz dinâmica ou tensor
+        self.dp = self._filling(self.dp)  # Preenche a matriz dinâmica ou tensor
     
     def compute_lcs(self)   -> SequenceAlignment:
         """
@@ -27,7 +27,7 @@ class LCSFinder():
         Returns:
             SequenceAlignment: Um objeto que contém informações relevantes da sequência.
         """
-        lcs = self._lcs_reconstruction(self.dp)  # Reconstrói a subsequência comum mais longa (LCS) usando a matriz dinâmica ou tensor preenchido
+        lcs = self._lcs_reconstruction(self.dp)  # Reconstrói a subsequência comum mais longa (LCS)
         aligned1, aligned2, aligned3 = self._sequence_alignment(lcs)  # Alinha as sequencias 
         
         return SequenceAlignment(self.seq1, self.seq2, aligned1, aligned2, len(lcs), self.seq3, aligned3 if self.seq3 else None)
@@ -50,12 +50,12 @@ class LCSFinder():
         Obtém a maior subsequência comum (LCS) entre duas ou três sequências.
 
         Returns:
-            str: A LCS reconstruída a partir da matriz dinâmica ou tensor preenchido.
+            str: A LCS reconstruída.
         """
         lcs = self._lcs_reconstruction(self.dp)  # Reconstrói a subsequência comum mais longa (LCS) usando a matriz dinâmica ou tensor preenchido
         return lcs  # Retorna a LCS reconstruída a partir da matriz dinâmica ou tensor preenchido
 
-    def _dynamic_matrix_initialization(self) -> list[list[int]] | list[list[list[int]]]:
+    def _initialization(self) -> list[list[int]] | list[list[list[int]]]:
         """
         Inicializa a matriz dinâmica ou tensor para armazenar os valores de LCS.
         
@@ -67,18 +67,18 @@ class LCSFinder():
         k = self.seq3.length() if self.seq3 else 0
 
         # 1. Inicialização da matriz dinâmica (todos os valores iguais a 0 e tamanho (n+1) x (m+1):
-        # a primeira coluna e linha são preenchidas por 0 sempre
+        # A primeira coluna e linha são sempre preenchidas por 0.
         if self.seq3 is None:
             return [[0 for _ in range(m+1)] for _ in range(n+1)]
         else:
             return [[[0 for _ in range(k+1)] for _ in range(m+1)] for _ in range(n+1)]
 
-    def _dynamic_matrix_filled(self, dp: list[list[int]] | list[list[list[int]]]) -> list[list[int]] | list[list[list[int]]]:
+    def _filling(self, dp: list[list[int]] | list[list[list[int]]]) -> list[list[int]] | list[list[list[int]]]:
         """
         Preenche a matriz dinâmica ou tensor com os valores de LCS usando programação dinâmica.
         
         Parameters:
-            matrix (list[list[int]] | list[list[list[int]]]): A matriz dinâmica ou tensor inicializado com zeros.
+            dp (list[list[int]] | list[list[list[int]]]): A matriz dinâmica ou tensor inicializado com zeros.
         
         Returns:
             list[list[int]] | list[list[list[int]]]: A matriz dinâmica ou tensor preenchido com os valores de LCS.
@@ -89,12 +89,12 @@ class LCSFinder():
         
         # 2. Preenchimento da matriz ou tensor
         if self.seq3 is None:
-            for i in range(1, n+1): # não inclui o 0 da primeira coluna
-                for j in range(1, m+1): # não inclui o 0 da primeira coluna
+            for i in range(1, n+1):  # Não inclui o 0 da primeira coluna
+                for j in range(1, m+1):  # Não inclui o 0 da primeira coluna
                     if self.seq1.char_at(i-1) == self.seq2.char_at(j-1):
-                        dp[i][j] = dp[i-1][j-1] + 1 # Adiciona um à diagonal anterior se os caracteres forem iguais
+                        dp[i][j] = dp[i-1][j-1] + 1  # Adiciona 1 à diagonal anterior se os caracteres forem iguais
                     else:
-                        dp[i][j] = max(dp[i-1][j], dp[i][j-1]) # Retorna o máximo entre entrada superior e a entrada à esquerda
+                        dp[i][j] = max(dp[i-1][j], dp[i][j-1])  # Retorna o máximo entre entrada superior e a entrada à esquerda
         else:
             for i in range(1, n+1):
                 for j in range(1, m+1):
@@ -110,17 +110,17 @@ class LCSFinder():
         Reconstrói a subsequência comum mais longa (LCS) a partir da matriz dinâmica ou tensor preenchido.
         
         Parameters:
-            matrix (list[list[int]] | list[list[list[int]]]): A matriz dinâmica ou tensor preenchido com os valores de LCS.
+            dp (list[list[int]] | list[list[list[int]]]): A matriz dinâmica ou tensor preenchido com os valores de LCS.
         
         Returns:
-            str: A subsequência comum mais longa (LCS) reconstruída a partir da matriz dinâmica ou tensor preenchido.
+            str: A subsequência comum mais longa (LCS).
         """
         lcs = "" 
         i = self.seq1.length()
         j = self.seq2.length()
         k = self.seq3.length() if self.seq3 else 0
 
-        # 3. Reconstrução da subsequência comum mais longa (LCS) usando a matriz dinâmica ou tensor preenchido
+        # 3. Reconstrução da subsequência comum mais longa (LCS)
         if not self.seq3:
             while i > 0 and j > 0:
                 if self.seq1.char_at(i-1) == self.seq2.char_at(j-1):
@@ -176,7 +176,7 @@ class LCSFinder():
                     aligned1 += self.seq1.char_at(i)
                     aligned2 += "-"
                     i += 1
-                while j < m and self.seq2.char_at(j) != lcs[l]:  # Se o caractere da seq2 não for igual ao caractere da LCS, adiciona traços
+                while j < m and self.seq2.char_at(j) != lcs[l]:
                     aligned1 += "-"
                     aligned2 += self.seq2.char_at(j)
                     j += 1
@@ -185,8 +185,8 @@ class LCSFinder():
                 i += 1
                 j += 1
                 l += 1
-            aligned1 += self.seq1.seq[i:] # Adiciona o restante da sequência seq1
-            aligned2 += self.seq2.seq[j:] # Adiciona o restante da sequência seq2
+            aligned1 += self.seq1.seq[i:]  # Adiciona o restante da sequência seq1
+            aligned2 += self.seq2.seq[j:]
             if len(aligned1) < len(aligned2):
                 aligned1 += "-" * (len(aligned2) - len(aligned1))  # Preenche com traços se necessário
             if len(aligned2) < len(aligned1):
@@ -195,9 +195,9 @@ class LCSFinder():
         else: 
             # Alinhamento para três sequências usando a LCS reconstruída
             while l < len(lcs):
-                # Avança nas três sequências até encontrar o próximo caractere da LCS em cada uma
+                # Avança nas três sequências até encontrar o próximo caractere da LCS em cada uma.
                 while i < n and self.seq1.char_at(i) != lcs[l]:
-                    # Casos onde dois caracteres coincidem, mas não são o da LCS
+                    # Casos onde dois caracteres coincidem, mas não são o da LCS.
                     if self.seq1.char_at(i) == self.seq2.char_at(j) != lcs[l]:
                         aligned1 += self.seq1.char_at(i)
                         aligned2 += self.seq2.char_at(j)
@@ -217,13 +217,13 @@ class LCSFinder():
                         j += 1
                         k += 1
                     else: 
-                        # Caso nenhum caractere coincida, adiciona apenas o da seq1 e traços
+                        # Caso nenhum caractere coincida, adiciona apenas o caractere da seq1 e traços.
                         aligned1 += self.seq1.char_at(i)
                         aligned2 += "-"
                         aligned3 += "-"
                         i += 1
                 while j < m and self.seq2.char_at(j) != lcs[l]:
-                    # Casos onde dois caracteres coincidem, mas não são o da LCS
+                    # Casos onde dois caracteres coincidem, mas não são o da LCS.
                     if self.seq2.char_at(j) == self.seq1.char_at(i) != lcs[l]:
                         aligned1 += self.seq1.char_at(i)
                         aligned2 += self.seq2.char_at(j)
@@ -243,13 +243,13 @@ class LCSFinder():
                         i += 1
                         k += 1
                     else:
-                        # Caso nenhum caractere coincida, adiciona apenas o da seq2 e traços
+                        # Caso nenhum caractere coincida, adiciona apenas o caractere da seq2 e traços.
                         aligned1 += "-"
                         aligned2 += self.seq2.char_at(j)
                         aligned3 += "-"
                         j += 1
                 while k < w and self.seq3.char_at(k) != lcs[l]:
-                    # Casos onde dois caracteres coincidem, mas não são o da LCS
+                    # Casos onde dois caracteres coincidem, mas não são o da LCS.
                     if self.seq3.char_at(k) == self.seq1.char_at(i) != lcs[l]:
                         aligned1 += self.seq1.char_at(i)
                         aligned2 += "-"
@@ -269,7 +269,7 @@ class LCSFinder():
                         i += 1
                         j += 1
                     else:
-                        # Caso nenhum caractere coincida, adiciona apenas o da seq3 e traços
+                        # Caso nenhum caractere coincida, adiciona apenas o caractere da seq3 e traços
                         aligned1 += "-"
                         aligned2 += "-"
                         aligned3 += self.seq3.char_at(k)
@@ -283,66 +283,47 @@ class LCSFinder():
                 k += 1
                 l += 1
 
-            # Adiciona o restante das sequências (caso alguma seja maior)
-            aligned1 += self.seq1.seq[i:] # Adiciona o restante da sequência seq1
-            aligned2 += self.seq2.seq[j:] # Adiciona o restante da sequência seq2
-            aligned3 += self.seq3.seq[k:] # Adiciona o restante da sequência seq3
+            # Adiciona o restante das sequências (caso alguma seja maior).
+            aligned1 += self.seq1.seq[i:] # Adiciona o restante da sequência seq1.
+            aligned2 += self.seq2.seq[j:]
+            aligned3 += self.seq3.seq[k:]
 
-            # Ajusta o comprimento das sequências alinhadas para que fiquem iguais, preenchendo com traços se necessário
+            # Ajusta o comprimento das sequências alinhadas para que fiquem iguais, preenchendo com traços se necessário.
             max_length = max(len(aligned1), len(aligned2), len(aligned3))
             min_length = min(len(aligned1), len(aligned2), len(aligned3))
 
             while min_length < max_length:
-                # Verifica se aligned1 é mais curta que o comprimento máximo desejado
+                # Verifica se aligned1 é menor que o comprimento máximo
                 if len(aligned1) < max_length:
-                    # Se algum índice da sequência (i, j, k) chegou ao fim da respetiva sequência (n, m, w),
-                    # preenche aligned1 com lacunas ("-") até atingir max_length
+                    # Se algum índice da sequência (i, j, k) chegou ao fim da respetiva sequência (n, m, w), preenche aligned1 com lacunas ("-") até atingir max_length
                     if i == n or j == m or k == w:
                         aligned1 += "-" * (max_length - len(aligned1))
-                    # Se seq1[i] for diferente de seq2[j] mas seq2[j] for igual a seq3[k],
-                    # insere uma lacuna em aligned1 na posição i e avança j e k
                     elif self.seq1.char_at(i) != self.seq2.char_at(j) and self.seq2.char_at(j) == self.seq3.char_at(k):
                         aligned1 = aligned1[:i] + "-" + aligned1[i:]
                         j += 1
                         k += 1
-                    # Se seq1[i] for diferente de seq2[j] mas seq1[i] for igual a seq3[k],
-                    # insere uma lacuna em aligned1 após a posição i e avança j e k
                     elif self.seq1.char_at(i) != self.seq2.char_at(j) and self.seq1.char_at(i) == self.seq3.char_at(k):
                         aligned1 = aligned1[:i+1] + "-" + aligned1[i+1:]
                         j += 1
                         k += 1
-
-                # Verifica se aligned2 é mais curta que o comprimento máximo desejado
                 if len(aligned2) < max_length:
-                    # Se algum índice da sequência chegou ao fim, preenche aligned2 com lacunas até atingir max_length
                     if i == n or j == m or k == w:
                         aligned2 += "-" * (max_length - len(aligned2))
-                    # Se seq2[j] for diferente de seq1[i] mas seq1[i] for igual a seq3[k],
-                    # insere uma lacuna em aligned2 na posição j e avança i e k
                     elif self.seq2.char_at(j) != self.seq1.char_at(i) and self.seq1.char_at(i) == self.seq3.char_at(k):
                         aligned2 = aligned2[:j] + "-" + aligned2[j:]
                         i += 1
                         k += 1
-                    # Se seq2[j] for diferente de seq1[i] mas seq2[j] for igual a seq3[k],
-                    # insere uma lacuna em aligned2 após a posição j e avança i e k
                     elif self.seq2.char_at(j) != self.seq1.char_at(i) and self.seq2.char_at(j) == self.seq3.char_at(k):
                         aligned2 = aligned2[:j+1] + "-" + aligned2[j+1:]
                         i += 1
                         k += 1
-
-                # Verifica se aligned3 é mais curta que o comprimento máximo desejado
                 if len(aligned3) < max_length:
-                    # Se algum índice da sequência chegou ao fim, preenche aligned3 com lacunas até atingir max_length
                     if i == n or j == m or k == w:
                         aligned3 += "-" * (max_length - len(aligned3))
-                    # Se seq3[k] for diferente de seq1[i] mas seq1[i] for igual a seq2[j],
-                    # insere uma lacuna em aligned3 na posição k e avança i e j
                     elif self.seq3.char_at(k) != self.seq1.char_at(i) and self.seq1.char_at(i) == self.seq2.char_at(j):
                         aligned3 = aligned3[:k] + "-" + aligned3[k:]
                         i += 1
                         j += 1
-                    # Se seq3[k] for diferente de seq1[i] mas seq3[k] for igual a seq2[j],
-                    # insere uma lacuna em aligned3 após a posição k e avança i e j
                     elif self.seq3.char_at(k) != self.seq1.char_at(i) and self.seq3.char_at(k) == self.seq2.char_at(j):
                         aligned3 = aligned3[:k+1] + "-" + aligned3[k+1:]
                         i += 1
@@ -352,5 +333,4 @@ class LCSFinder():
                 max_length = max(len(aligned1), len(aligned2), len(aligned3))
                 min_length = min(len(aligned1), len(aligned2), len(aligned3))
 
-            # Devolve as sequências alinhadas
         return aligned1, aligned2, aligned3
