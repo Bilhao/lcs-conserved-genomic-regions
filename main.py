@@ -87,7 +87,7 @@ def main():
                 seq1 = list(sequence_db.database.values())[0]
                 seq2 = list(sequence_db.database.values())[1]
                 lcs_finder = LCSFinder(seq1, seq2)
-                alignment = lcs_finder.compute_lcs()
+                alignment: SequenceAlignment = lcs_finder.compute_lcs()
                 print("Detalhes do Alinhamento:")
                 print(alignment)
             elif len(sequence_db.database.values()) == 3:
@@ -95,7 +95,7 @@ def main():
                 seq2 = list(sequence_db.database.values())[1]
                 seq3 = list(sequence_db.database.values())[2]
                 lcs_finder = LCSFinder(seq1, seq2, seq3)
-                alignment = lcs_finder.compute_lcs()
+                alignment: SequenceAlignment = lcs_finder.compute_lcs()
                 print("Detalhes do Alinhamento:")
                 print(alignment)
             else:
