@@ -1,7 +1,13 @@
 from sequence import Sequence
 from itertools import product
 
-class LCSFinderNSequences:
+class LCSFinderNSequences():
+    """
+    Classe para encontrar a subsequência comum mais longa (LCS) entre N sequências.
+
+    Attributes:
+        sequences (list[Sequence]): Lista de objetos Sequence representando as sequências a serem comparadas.
+    """
     def __init__(self, sequences: list[Sequence]):
         self.sequences = sequences
 

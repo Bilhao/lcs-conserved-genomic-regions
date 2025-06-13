@@ -5,7 +5,11 @@ from lcs_finder import LCSFinder
 from lcs_finder_n_sequences import LCSFinderNSequences
 import plotly.graph_objects as go
 
-class Visualize:
+class Visualize():
+    """
+    Classe para visualizar o LCS (Longest Common Subsequence) e o alinhamento de sequências de DNA.
+    Esta classe utiliza a biblioteca Plotly para criar um gráfico de calor (heatmap) que representa o alinhamento das sequências.
+    """
     def __init__(self, sequence_db: SequenceDatabase):
         self.sequence_db = sequence_db
 
