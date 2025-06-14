@@ -60,8 +60,8 @@ class LCSFinderNSequences():
         e os valores são inicialmente 0. Cada tupla representa um estado possível do alinhamento
         (quantos caracteres já foram considerados de cada sequência).
 
-        Exemplo para 4 sequências de tamanho 2:
-        As chaves serão (0,0,0,0), (0,0,0,1), ..., (2,2,2,2), todas iniciadas com valor 0.
+        Exemplo para 4 sequências de tamanho 3:
+        As chaves serão (0,0,0,0), (0,0,0,1), ..., (3,3,3,3), todas iniciadas com valor 0.
         """
         lengths = [seq.length() for seq in self.sequences]
         n = len(self.sequences)
@@ -70,13 +70,11 @@ class LCSFinderNSequences():
         def fill(indices):
             """
             Função recursiva para preencher o dicionário dinâmico com todas as combinações de índices.
-
-            
             """
             if len(indices) == n:  # Se já temos índices para todas as sequências
                 dd[tuple(indices)] = 0  # Inicializa o valor como 0
                 return
-            for i in range(lengths[len(indices)] + 1):  # 
+            for i in range(lengths[len(indices)] + 1):  # De 0 até o comprimento da sequência
                 fill(indices + [i])
 
         fill([])
@@ -105,7 +103,7 @@ class LCSFinderNSequences():
         n = len(self.sequences)
 
         # Gera todas as combinações possíveis de índices (excluindo o índice 0)
-        for indices in product(*[range(1, l + 1) for l in lengths]):  # product gera todas as combinações de índices possíveis. Ex: product((0,1), (0,1), (0,1)) --> (0,0,0) (0,0,1) (0,1,0) (0,1,1) (1,0,0) ...
+        for indices in product(*[range(1, l + 1) for l in lengths]):  # product gera todas as combinações de índices possíveis usando o produto cartesiano. Ex: product((0,1), (0,1), (0,1)) --> (0,0,0) (0,0,1) (0,1,0) (0,1,1) (1,0,0) ...
             # Pega o caractere atual de cada sequência
             chars = [self.sequences[i].seq[indices[i] - 1] for i in range(n)] 
 
