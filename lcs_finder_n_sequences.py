@@ -41,15 +41,16 @@ class LCSFinderNSequences():
         indices = [seq.length() for seq in self.sequences]
         lcs_chars = []
 
-        while all(i > 0 for i in indices):
-            chars = [self.sequences[i].seq[indices[i] - 1] for i in range(len(self.sequences))]
-            if all(c == chars[0] for c in chars):
+        while all(i > 0 for i in indices):  # Enquanto todos os índices forem maiores que 0
+            chars = [self.sequences[i].seq[indices[i] - 1] for i in range(len(self.sequences))]  # Pega o caractere atual de cada sequência
+            if all(c == chars[0] for c in chars):  # Se todos os caracteres são iguais, faz parte do LCS
                 lcs_chars.append(chars[0])
                 indices = [i - 1 for i in indices]
-            else:
+            else:  # Se não são iguais, retrocede em uma das sequências (aquela que maximiza o valor do LCS)
                 max_index = max(range(len(indices)), key=lambda i: self.dd[tuple(indices[:i] + [indices[i] - 1] + indices[i + 1:])] if indices[i] > 0 else -1)
                 indices[max_index] -= 1
 
+        # Retorna o LCS invertido (pois foi construído de trás para frente)
         return ''.join(reversed(lcs_chars))
 
     def _initialization(self):
