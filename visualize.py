@@ -23,7 +23,28 @@ class Visualize():
             )
         self.alignment: SequenceAlignment = self.lcs_finder.compute_lcs()
 
-
+    def _compute_consensus(self, aligned_seqs):
+        """
+        Calcula a sequência consenso a partir das sequências alinhadas.
+        """
+        consensus = []
+        alignment_length = len(aligned_seqs[0])
+        for i in range(alignment_length):
+            column = [seq[i] for seq in aligned_seqs]
+            base_counts = {}
+            for base in column:
+                if base != "-":
+                    if base not in base_counts:
+                        base_counts[base] = 0
+                    base_counts[base] += 1
+            if base_counts:
+                # Escolhe a base com maior contagem (desempate: ordem alfabética)
+                consensus_base = sorted(base_counts.items(), key=lambda x: (-x[1], x[0]))[0][0]  # (-x[1] para ordem decrescente dos números (o primeiro valor é o maior), x[0] para ordem alfabética)
+            else:
+                consensus_base = "-"
+            consensus.append(consensus_base)
+        return ''.join(consensus)
+    
     def visualize_sequences(self):
         """
         Visualiza o LCS e o alinhamento das sequências usando Plotly.
@@ -36,6 +57,10 @@ class Visualize():
         aligned_seqs = [self.alignment.aligned_seq1, self.alignment.aligned_seq2]
         if self.alignment.aligned_seq3:
             aligned_seqs.append(self.alignment.aligned_seq3)
+
+        consensus = self._compute_consensus(aligned_seqs)
+        aligned_seqs.append(consensus)
+        ids.append("Consenso")
 
         map_chars = {
             "A": 0,
