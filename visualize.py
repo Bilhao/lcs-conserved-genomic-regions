@@ -33,10 +33,9 @@ class Visualize():
             column = [seq[i] for seq in aligned_seqs]
             base_counts = {}
             for base in column:
-                if base != "-":
-                    if base not in base_counts:
-                        base_counts[base] = 0
-                    base_counts[base] += 1
+                if base not in base_counts:
+                    base_counts[base] = 0
+                base_counts[base] += 1
             if base_counts:
                 # Escolhe a base com maior contagem (desempate: ordem alfabética)
                 consensus_base = sorted(base_counts.items(), key=lambda x: (-x[1], x[0]))[0][0]  # (-x[1] para ordem decrescente dos números (o primeiro valor é o maior), x[0] para ordem alfabética)
