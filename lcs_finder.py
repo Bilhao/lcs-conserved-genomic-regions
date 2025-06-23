@@ -20,7 +20,7 @@ class LCSFinder():
         self.dp = self._initialization()  # Inicializa a matriz dinâmica ou tensor
         self.dp = self._filling(self.dp)  # Preenche a matriz dinâmica ou tensor
     
-    def compute_lcs(self)   -> SequenceAlignment:
+    def compute_lcs(self) -> SequenceAlignment:
         """
         Computa o alinhamento de duas ou três sequências, retornando um objeto SequenceAlignment.
 

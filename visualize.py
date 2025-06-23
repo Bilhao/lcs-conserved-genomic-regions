@@ -22,7 +22,7 @@ class Visualize():
                 list(self.sequence_db.database.values())[2] if len(self.sequence_db.database.values()) > 2 else None
             )
         self.alignment: SequenceAlignment = self.lcs_finder.compute_lcs()
-
+    
     def _compute_consensus(self, aligned_seqs):
         """
         Calcula a sequência consenso a partir das sequências alinhadas.
