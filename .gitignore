@@ -167,7 +167,8 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-# LCS Conserved Genomic Regions - Tests and temporary files
-test_*.py
-debug_*.py
-/tmp/
+# Ruff stuff:
+.ruff_cache/
+
+# PyPI configuration file
+.pypirc
