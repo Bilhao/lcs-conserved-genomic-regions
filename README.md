@@ -5,7 +5,7 @@ A Python-based bioinformatics tool for identifying and analyzing conserved genom
 ## Features
 
 - **Global Sequence Alignment**: Uses the Needleman-Wunsch algorithm for optimal global alignment
-- **Multi-sequence Support**: Handles alignment of 2 or 3 sequences simultaneously
+- **Multi-sequence Support**: Handles alignment of 2, 3, or N sequences simultaneously
 - **Configurable Scoring**: Customizable match scores, mismatch penalties, and gap penalties
 - **FASTA File Support**: Load sequences directly from FASTA files
 - **Interactive Visualization**: Generate heatmap visualizations of alignments
@@ -105,6 +105,32 @@ aligner = LCSFinder(seq1, seq2, match_score=3, mismatch_penalty=-2, gap_penalty=
 alignment = aligner.compute_lcs()
 ```
 
+#### N-Sequence Alignment (4+ sequences)
+
+```python
+from sequence import Sequence
+from lcs_finder_n_sequences import LCSFinderNSequences
+
+# Create multiple sequences
+sequences = [
+    Sequence("seq1", "Human sequence", "ATCGATCGATCG"),
+    Sequence("seq2", "Mouse sequence", "ATCGATCGATGG"),
+    Sequence("seq3", "Chimp sequence", "ATCGATCGAACG"),
+    Sequence("seq4", "Rat sequence", "ATCGATCGTTCG"),
+    Sequence("seq5", "Dog sequence", "ATCGATCGATAG")
+]
+
+# Perform N-way LCS calculation
+aligner = LCSFinderNSequences(sequences)
+lcs_length = aligner.get_lcs_length()
+lcs_sequence = aligner.get_lcs()
+
+print(f"LCS length: {lcs_length}")
+print(f"LCS sequence: {lcs_sequence}")
+```
+
+**Note**: N-sequence alignment currently supports LCS calculation but not detailed alignment visualization or scoring. For comprehensive alignment analysis with scoring and visualization, use the Needleman-Wunsch implementation with 2-3 sequences.
+
 #### Working with FASTA Files
 
 ```python
@@ -117,8 +143,16 @@ db.load_from_fasta("example.fasta")
 # Get sequences for alignment
 sequences = list(db.database.values())
 if len(sequences) >= 2:
-    aligner = LCSFinder(sequences[0], sequences[1])
-    alignment = aligner.compute_lcs()
+    if len(sequences) <= 3:
+        # Use Needleman-Wunsch for 2-3 sequences
+        aligner = LCSFinder(sequences[0], sequences[1])
+        alignment = aligner.compute_lcs()
+    else:
+        # Use N-sequence LCS for 4+ sequences
+        from lcs_finder_n_sequences import LCSFinderNSequences
+        aligner = LCSFinderNSequences(sequences)
+        lcs_length = aligner.get_lcs_length()
+        lcs_sequence = aligner.get_lcs()
 ```
 
 ## Algorithm Details
@@ -142,6 +176,21 @@ For three sequences, the algorithm extends to 3D space:
 - Uses a 3D tensor instead of a 2D matrix
 - Considers all possible alignment combinations
 - Maintains optimal substructure property
+
+### N-Sequence LCS Algorithm
+
+For sequences beyond three (N ≥ 4), the implementation uses a specialized LCS algorithm:
+- **Dynamic Programming Approach**: Uses multi-dimensional state space
+- **Cartesian Product**: Considers all possible index combinations across sequences
+- **Optimal Substructure**: Maintains LCS properties across multiple sequences
+- **Time Complexity**: O(∏(n_i)) where n_i is the length of sequence i
+- **Space Complexity**: O(∏(n_i)) for storing all state combinations
+
+**Current Limitations for N-sequences:**
+- LCS calculation and sequence reconstruction available
+- Detailed alignment scoring and gap handling not implemented
+- Visualization limited to 2-3 sequences
+- For research applications requiring detailed alignment of 4+ sequences, consider specialized multiple sequence alignment tools
 
 ## File Structure
 
@@ -184,9 +233,17 @@ The tool includes interactive visualization capabilities using Plotly:
 
 ## Performance Considerations
 
-- **Time Complexity**: O(n×m) for two sequences, O(n×m×k) for three sequences
-- **Space Complexity**: O(n×m) for two sequences, O(n×m×k) for three sequences
-- **Recommended Limits**: Works efficiently with sequences up to ~1000 nucleotides
+- **Time Complexity**: 
+  - O(n×m) for two sequences
+  - O(n×m×k) for three sequences  
+  - O(∏(n_i)) for N sequences where n_i is length of sequence i
+- **Space Complexity**: 
+  - O(n×m) for two sequences
+  - O(n×m×k) for three sequences
+  - O(∏(n_i)) for N sequences
+- **Recommended Limits**: 
+  - Works efficiently with 2-3 sequences up to ~1000 nucleotides
+  - For N sequences (4+), practical limit depends on sequence lengths due to exponential space complexity
 
 ## Contributing
 
