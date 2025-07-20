@@ -1,0 +1,229 @@
+# LCS Conserved Genomic Regions
+
+A Python-based bioinformatics tool for identifying and analyzing conserved genomic regions using global sequence alignment algorithms. This project implements the Needleman-Wunsch algorithm to find optimal alignments between DNA sequences and identify conserved regions.
+
+## Features
+
+- **Global Sequence Alignment**: Uses the Needleman-Wunsch algorithm for optimal global alignment
+- **Multi-sequence Support**: Handles alignment of 2 or 3 sequences simultaneously
+- **Configurable Scoring**: Customizable match scores, mismatch penalties, and gap penalties
+- **FASTA File Support**: Load sequences directly from FASTA files
+- **Interactive Visualization**: Generate heatmap visualizations of alignments
+- **Comprehensive Analysis**: Calculate identity percentages and identify conserved positions
+
+## Installation
+
+### Prerequisites
+
+- Python 3.7 or higher
+- pip package manager
+
+### Setup
+
+1. Clone the repository:
+```bash
+git clone https://github.com/Bilhao/lcs-conserved-genomic-regions.git
+cd lcs-conserved-genomic-regions
+```
+
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+## Usage
+
+### Interactive Mode
+
+Run the main application for an interactive command-line interface:
+
+```bash
+python main.py
+```
+
+The interactive interface allows you to:
+- Add sequences manually
+- Load sequences from FASTA files
+- Calculate alignments
+- View detailed alignment information
+- Generate visualizations
+
+### Programmatic Usage
+
+#### Basic Alignment
+
+```python
+from sequence import Sequence
+from lcs_finder import LCSFinder
+
+# Create sequences
+seq1 = Sequence("seq1", "Human sequence", "ATCGATCGATCG")
+seq2 = Sequence("seq2", "Mouse sequence", "ATCGATCGATGG")
+
+# Perform alignment
+aligner = LCSFinder(seq1, seq2)
+alignment = aligner.compute_lcs()
+
+# Get results
+print(f"Alignment score: {alignment.score}")
+print(f"Identity: {alignment.identity():.1f}%")
+print(f"Aligned sequence 1: {alignment.aligned_seq1}")
+print(f"Aligned sequence 2: {alignment.aligned_seq2}")
+```
+
+#### Three-Sequence Alignment
+
+```python
+from sequence import Sequence
+from lcs_finder import LCSFinder
+
+# Create three sequences
+seq1 = Sequence("seq1", "Human sequence", "ATCGATCGATCG")
+seq2 = Sequence("seq2", "Mouse sequence", "ATCGATCGATGG")
+seq3 = Sequence("seq3", "Chimp sequence", "ATCGATCGAACG")
+
+# Perform three-way alignment
+aligner = LCSFinder(seq1, seq2, seq3)
+alignment = aligner.compute_lcs()
+
+# Get results
+print(f"Three-way alignment score: {alignment.score}")
+print(f"Identity: {alignment.identity():.1f}%")
+```
+
+#### Custom Scoring Parameters
+
+```python
+from sequence import Sequence
+from lcs_finder import LCSFinder
+
+seq1 = Sequence("seq1", "Sequence 1", "ATCG")
+seq2 = Sequence("seq2", "Sequence 2", "AGTC")
+
+# Custom scoring: match=3, mismatch=-2, gap=-1
+aligner = LCSFinder(seq1, seq2, match_score=3, mismatch_penalty=-2, gap_penalty=-1)
+alignment = aligner.compute_lcs()
+```
+
+#### Working with FASTA Files
+
+```python
+from sequence_database import SequenceDatabase
+
+# Load sequences from FASTA file
+db = SequenceDatabase()
+db.load_from_fasta("example.fasta")
+
+# Get sequences for alignment
+sequences = list(db.database.values())
+if len(sequences) >= 2:
+    aligner = LCSFinder(sequences[0], sequences[1])
+    alignment = aligner.compute_lcs()
+```
+
+## Algorithm Details
+
+### Needleman-Wunsch Algorithm
+
+This tool implements the Needleman-Wunsch algorithm for global sequence alignment:
+
+- **Scoring System**: 
+  - Match: +2 (default)
+  - Mismatch: -1 (default)
+  - Gap: -1 (default)
+
+- **Dynamic Programming**: Uses 2D matrices for pairwise alignment and 3D tensors for three-way alignment
+
+- **Traceback**: Reconstructs optimal alignment by backtracking through the scoring matrix
+
+### Three-Sequence Extension
+
+For three sequences, the algorithm extends to 3D space:
+- Uses a 3D tensor instead of a 2D matrix
+- Considers all possible alignment combinations
+- Maintains optimal substructure property
+
+## File Structure
+
+```
+lcs-conserved-genomic-regions/
+├── main.py                    # Interactive command-line interface
+├── sequence.py                # Sequence class definition
+├── lcs_finder.py             # Needleman-Wunsch algorithm implementation
+├── lcs_finder_n_sequences.py # N-sequence LCS implementation
+├── sequence_alignment.py     # Alignment result class
+├── sequence_database.py      # Sequence database management
+├── visualize.py              # Visualization tools
+├── example.fasta            # Example FASTA file
+├── requirements.txt         # Python dependencies
+└── README.md               # This file
+```
+
+## Example Output
+
+```
+=== Two-Sequence Alignment ===
+Sequence 1: ATCGATCGATCG
+Sequence 2: ATCGATCGATGG
+
+> Sequência 1: A T C G A T C G A T C G
+> Sequência 2: A T C G A T C G A T G G
+
+> Comprimento do alinhamento = 12
+> Posições idênticas nas sequências (✓): 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12 → total = 11
+> Identity = (11 ÷ 12) × 100 ≈ 91.67%
+```
+
+## Visualization
+
+The tool includes interactive visualization capabilities using Plotly:
+
+- **Heatmap Display**: Visual representation of sequence alignments
+- **Position Highlighting**: Clearly shows conserved and variable positions
+- **Interactive Features**: Zoom, pan, and hover for detailed information
+
+## Performance Considerations
+
+- **Time Complexity**: O(n×m) for two sequences, O(n×m×k) for three sequences
+- **Space Complexity**: O(n×m) for two sequences, O(n×m×k) for three sequences
+- **Recommended Limits**: Works efficiently with sequences up to ~1000 nucleotides
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## Testing
+
+Run the test suite:
+
+```bash
+# Basic functionality tests
+python test_needleman_wunsch.py
+
+# Integration tests
+python test_integration.py
+```
+
+## License
+
+This project is open source and available under the MIT License.
+
+## Authors
+
+- **Bilhao** - Initial work and algorithm implementation
+
+## Acknowledgments
+
+- Needleman-Wunsch algorithm (1970) for global sequence alignment
+- Plotly team for visualization capabilities
+- Bioinformatics community for algorithm insights
+
+## References
+
+1. Needleman, S. B.; Wunsch, C. D. (1970). "A general method applicable to the search for similarities in the amino acid sequence of two proteins". Journal of Molecular Biology. 48 (3): 443–53.
+
+2. Mount, D. W. (2004). Bioinformatics: Sequence and Genome Analysis. Cold Spring Harbor Laboratory Press.
