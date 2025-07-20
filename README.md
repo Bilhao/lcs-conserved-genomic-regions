@@ -1,10 +1,10 @@
 # LCS Conserved Genomic Regions
 
-A Python-based bioinformatics tool for identifying and analyzing conserved genomic regions using global sequence alignment algorithms. This project implements the Needleman-Wunsch algorithm to find optimal alignments between DNA sequences and identify conserved regions.
+A Python-based bioinformatics tool for identifying and analyzing conserved genomic regions using global sequence alignment algorithms. This project dynamic programming to find optimal alignments between DNA sequences and identify conserved regions.
 
 ## Features
 
-- **Global Sequence Alignment**: Uses the Needleman-Wunsch algorithm for optimal global alignment
+- **Global Sequence Alignment**: Uses dynamic programming for optimal global alignment
 - **Multi-sequence Support**: Handles alignment of 2, 3, or N sequences simultaneously
 - **Configurable Scoring**: Customizable match scores, mismatch penalties, and gap penalties
 - **FASTA File Support**: Load sequences directly from FASTA files
@@ -91,20 +91,6 @@ print(f"Three-way alignment score: {alignment.score}")
 print(f"Identity: {alignment.identity():.1f}%")
 ```
 
-#### Custom Scoring Parameters
-
-```python
-from sequence import Sequence
-from lcs_finder import LCSFinder
-
-seq1 = Sequence("seq1", "Sequence 1", "ATCG")
-seq2 = Sequence("seq2", "Sequence 2", "AGTC")
-
-# Custom scoring: match=3, mismatch=-2, gap=-1
-aligner = LCSFinder(seq1, seq2, match_score=3, mismatch_penalty=-2, gap_penalty=-1)
-alignment = aligner.compute_lcs()
-```
-
 #### N-Sequence Alignment (4+ sequences)
 
 ```python
@@ -129,7 +115,7 @@ print(f"LCS length: {lcs_length}")
 print(f"LCS sequence: {lcs_sequence}")
 ```
 
-**Note**: N-sequence alignment currently supports LCS calculation but not detailed alignment visualization or scoring. For comprehensive alignment analysis with scoring and visualization, use the Needleman-Wunsch implementation with 2-3 sequences.
+**Note**: N-sequence alignment currently supports LCS calculation but not detailed alignment visualization or scoring.
 
 #### Working with FASTA Files
 
@@ -144,7 +130,6 @@ db.load_from_fasta("example.fasta")
 sequences = list(db.database.values())
 if len(sequences) >= 2:
     if len(sequences) <= 3:
-        # Use Needleman-Wunsch for 2-3 sequences
         aligner = LCSFinder(sequences[0], sequences[1])
         alignment = aligner.compute_lcs()
     else:
@@ -157,17 +142,7 @@ if len(sequences) >= 2:
 
 ## Algorithm Details
 
-### Needleman-Wunsch Algorithm
-
-This tool implements the Needleman-Wunsch algorithm for global sequence alignment:
-
-- **Scoring System**: 
-  - Match: +2 (default)
-  - Mismatch: -1 (default)
-  - Gap: -1 (default)
-
 - **Dynamic Programming**: Uses 2D matrices for pairwise alignment and 3D tensors for three-way alignment
-
 - **Traceback**: Reconstructs optimal alignment by backtracking through the scoring matrix
 
 ### Three-Sequence Extension
@@ -267,15 +242,3 @@ This project is open source and available under the MIT License.
 - **Costinha05**
 - **BalaFred7**
 - **simeaoversos**
-
-## Acknowledgments
-
-- Needleman-Wunsch algorithm (1970) for global sequence alignment
-- Plotly team for visualization capabilities
-- Bioinformatics community for algorithm insights
-
-## References
-
-1. Needleman, S. B.; Wunsch, C. D. (1970). "A general method applicable to the search for similarities in the amino acid sequence of two proteins". Journal of Molecular Biology. 48 (3): 443–53.
-
-2. Mount, D. W. (2004). Bioinformatics: Sequence and Genome Analysis. Cold Spring Harbor Laboratory Press.
