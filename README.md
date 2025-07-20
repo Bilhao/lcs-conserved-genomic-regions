@@ -198,14 +198,14 @@ For sequences beyond three (N ≥ 4), the implementation uses a specialized LCS 
 lcs-conserved-genomic-regions/
 ├── main.py                    # Interactive command-line interface
 ├── sequence.py                # Sequence class definition
-├── lcs_finder.py             # Needleman-Wunsch algorithm implementation
-├── lcs_finder_n_sequences.py # N-sequence LCS implementation
-├── sequence_alignment.py     # Alignment result class
-├── sequence_database.py      # Sequence database management
-├── visualize.py              # Visualization tools
-├── example.fasta            # Example FASTA file
-├── requirements.txt         # Python dependencies
-└── README.md               # This file
+├── lcs_finder.py              # Needleman-Wunsch algorithm implementation
+├── lcs_finder_n_sequences.py  # N-sequence LCS implementation
+├── sequence_alignment.py      # Alignment result class
+├── sequence_database.py       # Sequence database management
+├── visualize.py               # Visualization tools
+├── example.fasta              # Example FASTA file
+├── requirements.txt           # Python dependencies
+└── README.md                  # This file
 ```
 
 ## Example Output
@@ -245,14 +245,6 @@ The tool includes interactive visualization capabilities using Plotly:
   - Works efficiently with 2-3 sequences up to ~1000 nucleotides
   - For N sequences (4+), practical limit depends on sequence lengths due to exponential space complexity
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
 ## Testing
 
 Run the test suite:
@@ -271,7 +263,10 @@ This project is open source and available under the MIT License.
 
 ## Authors
 
-- **Bilhao** - Initial work and algorithm implementation
+- **Bilhao**
+- **Costinha05**
+- **BalaFred7**
+- **simeaoversos**
 
 ## Acknowledgments
 
